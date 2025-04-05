@@ -12,15 +12,15 @@ ToyMeter.dmgファイルをダウンロードして、ダブルクリックし�
 Toy_Meterアプリを起動し、リグと通信が確立できない場合、15秒程度で環境設定画面が開きます。
 設定は、この様にテキストディターで開きます。
 ———————
-# 修正後はアプリけーションの再起動を行ってください。
-# After making the correction, restart the application.
-#
-# SCAN_SPは通信ポート読み出し周期です。0.01〜0.1の間で数字が小さいほど高速周期です。
-# 	推奨値:FTDX10=0.02 , FT770=xxx , FT891=0.1 , FT991=xxx
-#
-SERIAL_PORT=/dev/cu.usbserial-1410
-BAUD_RATE=38400
-SCAN_SP=0.02
+　# 修正後はアプリけーションの再起動を行ってください。
+　# After making the correction, restart the application.
+　#
+　# SCAN_SPは通信ポート読み出し周期です。0.01〜0.1の間で数字が小さいほど高速周期です。
+　# 	推奨値:FTDX10=0.02 , FT770=xxx , FT891=0.1 , FT991=xxx
+　#
+　SERIAL_PORT=/dev/cu.usbserial-1410
+　BAUD_RATE=38400
+　SCAN_SP=0.02
 ———————
 SERIAL_PORTは通信ポートの情報です。
 BAUD_RATEは通信速度でリグ側と同じ値にします。
