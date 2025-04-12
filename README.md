@@ -50,3 +50,48 @@ SERIAL_PORT	通信ポート。例：
 		Windows COM3
 BAUD_RATE	通信速度。リグ側に合わせて設定（例：4800〜38400）
 SCAN_SP		読み出し周期（0.01〜0.1）。値が小さいほど高速
+```
+
+## 🍓 Raspberry Pi での利用
+起動手順
+
+1.アプリケーションをダウンロードして展開
+```ini
+unzip toy_meter_vx.x_rpi.zip
+cd toy_meter
+./toy_meter
+```
+2.自動起動を設定したい場合は以下を参照：
+```ini
+sudo nano /etc/systemd/system/toy_meter.service
+
+[Unit]
+Description=Toy Meter for YAESU FTDX10
+[Service]
+ExecStart=/home/pi/toy_meter/toy_meter -platform linuxfb
+Environment=QT_QPA_PLATFORM=linuxfb
+Restart=always
+User=pi
+Group=pi
+[Install]
+WantedBy=default.target
+
+sudo systemctl enable toy_meter
+
+```
+
+## 🍎 macOS での利用
+起動手順
+
+1.ToyMeter_vx.x_mac.dmg をダウンロードしてインストール
+
+2.USB接続ポートの確認（ターミナルで以下を実行）：
+```ini
+ls -l /dev/cu.*
+
+/dev/cu.usbserial-1410
+/dev/cu.SLAB_USBtoUART
+→ 対象デバイスのポート名を確認してください。
+```
+
+
