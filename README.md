@@ -1,41 +1,52 @@
-# toy_meter
-# アプリ概要
-	YAESU FTDX10 , FT7100 , FT891 , FT991 をターゲットにした簡易外部メーターとなります。
- 	メータはSメーター、SWRメーター、POメーター、ALCメータのみで非常にシンプルです。
-  	開発者:JP1RXQ	評価者:7K1AEU
+# Toy Meter for YAESU FTDX10 / FT710 / FT891 / FT991
 
-# toy_meter version
-	v0.6 評価版 Raspberry Pi & macOS Sequoia / FTDX10 , FT891
- 
-# 各種セットアップ
-# Raspberry Pi版
-	現在、未公開
+> ⚠️ **注意：本アプリケーションは現在評価中です。**
 
-# macOS版
-	macOS 12-15 (Monterey , Ventura , Sonoma , Sequoia)で評価中
-	ToyMeter.dmgファイルをダウンロードして、ダブルクリックしてToy_Meterのアプリをインストールしてください。
-	Toy_Meterアプリを起動し、リグと通信が確立できない場合、15秒程度で環境設定画面が開きます。
-	設定は、この様にテキストディターで開きます。
-	———————
- 	# 修正後はアプリけーションの再起動を行ってください。
-	# After making the correction, restart the application.
- 	#
-	# SCAN_SPは通信ポート読み出し周期です。0.01〜0.1の間で数字が小さいほど高速周期です。
- 	# 	推奨値:FTDX10=0.02 , FT770=xxx , FT891=0.1 , FT991=xxx
-	#
-	SERIAL_PORT=/dev/cu.usbserial-1410
-	BAUD_RATE=38400
-	SCAN_SP=0.02
-	———————
-	SERIAL_PORTは通信ポートの情報です。
-	BAUD_RATEは通信速度でリグ側と同じ値にします。
-	SCAN_SPはリグから情報取得周期を表します。推奨値は調整中で一番遅い0.1で試してください。
-	テキストエディターを閉じて保存します。保存後、アプリケーション終了し、再度立ち上げてください。
-	もし、動作中に通信速度、周期を変更したい場合、右下のJP1RXQをクリックしてください。
-	設定画面が現れます。設定した場合、必ずアプリは再立ち上げしてください。
+YAESU無線機向けの簡易メーターアプリケーションです。以下のプラットフォームに対応しています：
 
-# Windows11版
-	未開発
+- **Raspberry Pi OS Lite (64bit)** + 3.5inch LCD (480x320)
+- **macOS 12 Monterey 以降**
+- **Windows 11**
 
-# 本アプリ使用中に発生した如何なるトラブルに対して、全て利用者の責任であって、供給者は一切責任は負いません。
+## 🎛️ 対応機能
 
+### アナログメーター部
+- `SIG`（Signal メーター）
+- `PO`（Power メーター）
+- `SWR`（SWR メーター）
+- `ALC`（ALC メーター）
+
+### デジタルメーター部
+- `FA/FB`（周波数）
+- `TIME`（UTC / JST 表示）
+
+> ※ メーターの精度は ±10% 以内を目標としています。  
+> ※ メーターの針の動作は使用するリグによって異なります。
+
+---
+
+## 🚀 起動手順
+
+### 設定ファイルについて
+
+通信異常が約20秒続くと、初期設定ファイルが自動で開きます。
+
+```ini
+# 修正後はアプリけーションの再起動を行ってください。
+# After making the correction, restart the application.
+#
+# SCAN_SPは通信ポート読み出し周期です。0.01〜0.1の間で数字が小さいほど高速周期です。
+# 推奨値: FTDX10=0.02 , FT710=xxx , FT891=0.1 , FT991=xxx
+#
+SERIAL_PORT=/dev/cu.usbserial-1410
+BAUD_RATE=38400
+SCAN_SP=0.02
+
+# パラメータの意味
+パラメータ	説明
+SERIAL_PORT	通信ポート。例：
+		Raspberry Pi /dev/USB0
+		macOS /dev/cu.usbserial-1410
+		Windows COM3
+BAUD_RATE	通信速度。リグ側に合わせて設定（例：4800〜38400）
+SCAN_SP		読み出し周期（0.01〜0.1）。値が小さいほど高速
