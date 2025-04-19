@@ -167,7 +167,7 @@ sudo systemctl enable toy_meter
 ## 🍎 macOS で利用
 起動手順
 
-1.ToyMeter_vx.x_mac.dmg をダウンロードしてインストール
+1.toy_meter_vx.x_mac.dmg をダウンロードしてインストール
 
 2.USB接続ポートの確認（ターミナルで以下を実行）：
 ```ini
@@ -181,7 +181,7 @@ ls -l /dev/cu.*
 ## 🪟 Windows 11 で利用
 起動手順
 
-1.Toy_Meter_for_YAESU_vx.x_win.zip をダウンロード・展開し、実行ファイルを起動
+1.toy_meter_vx.x_win.zip をダウンロード・展開し、実行ファイルを起動
 
 2.デバイスマネージャーでポート番号（COMポート）を確認
 ```ini
