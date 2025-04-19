@@ -137,6 +137,10 @@ FNC4=DT_USB,MD0C;
 ```
 1.アプリケーションをダウンロードして展開
 ```ini
+cd
+sudo systemctl stop toy_meter
+sudo rm -r toy_meter
+wget https://github.com/o26daisuki/toy_meter/releases/download/vx.x/toy_meter_vx.x_rpi.zip
 unzip toy_meter_vx.x_rpi.zip
 cd toy_meter
 ./toy_meter
