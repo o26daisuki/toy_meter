@@ -68,7 +68,7 @@ FNC4=DT_USB,MD0C;
 | パラメータ      | 説明                             	        |
 |---------------+-----------------------------------------------+
 | SERIAL_PORT	| 通信ポート。例：                              	|
-|              	| - Raspberry Pi: `/dev/USB0`               	|
+|              	| - Raspberry Pi: `/dev/ttyUSB0`               	|
 |              	| - macOS: `/dev/cu.usbserial-1410`         	|
 |              	| - Windows: `COM3`                         	|
 | SERIAL_PORT_DL| Dual UART用第二通信ポート                        |
