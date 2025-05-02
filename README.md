@@ -8,7 +8,7 @@
 
 YAESU無線機向けの簡易メーターアプリケーションです。以下のプラットフォームに対応しています：
 
-- **Raspberry Pi OS Lite (64bit)** + 3.5inch LCD (480x320)
+- **Raspberry Pi OS Lite (64bit)** + 3.5inch LCD (480x320) タッチスクリーン機能使う場合、ドライバーはADS7846に限る
 - **macOS 12 Monterey 以降**
 - **Windows 11**
 
@@ -24,11 +24,13 @@ YAESU無線機向けの簡易メーターアプリケーションです。以下
 - `FA/FB`（周波数）
 - `TIME`（UTC / JST 表示）
 
-### ファンクションボタン部
-- CATコマンドを最大4つまで登録可能
+### ボタン部
+- CATコマンドを最大4つまで自由に登録可能(ただし、応答を期待するコマンドは使えない)
+- POメータ横のWを押すとAuto-Tune開始
+- 右下JP1RXQを押すとConfig設定開始
 
 > ※ メーターの精度は ±10% 以内を目標としています。  
-> ※ メーターの針の動作は使用するリグによって異なります。
+> ※ メーターの針の動作速度は使用する無線機と利用環境によって異なります。
 
 ---
 
@@ -48,6 +50,7 @@ YAESU無線機向けの簡易メーターアプリケーションです。以下
 #	Raspi /dev/ttyUSB0など、 macOS /dev/cu.xxxxxxなど、 Win32 COMxなど
 # SERIAL_PORT_DLはDual UART用に準備された物ですが、2つ目のポートとして指定できます。
 #	macOS /dev/cu.SLAB_USBtoUART または /dev/cu.SLAB_USBtoUART1など
+#       同時に２つのポートは使えません。
 # SCAN_SPは通信ポート読み出し周期です。0.01〜0.1の間で数字が小さいほど高速周期です。
 # 	推奨値:FTDX10=0.02 , FT770=xxx , FT891=0.1 , FT991=0.1
 # FNCxはCATコマンド発行機能です。
@@ -73,7 +76,7 @@ FNC4=DT_USB,MD0C;
 |              	| - Raspberry Pi: `/dev/ttyUSB0`               	|
 |              	| - macOS: `/dev/cu.usbserial-1410`         	|
 |              	| - Windows: `COM3`                         	|
-| SERIAL_PORT_DL| Dual UART用第二通信ポート                        |
+| SERIAL_PORT_DL| Dual UART用第二通信ポートまたは第二無線設備など     |
 | BAUD_RATE    	| 通信速度。リグ側に合わせて設定            		|
 |              	| 例：4800〜38400                           	|
 | SCAN_SP      	| 読み出し周期（0.01〜0.1）。値が小さいほど高速 	|
@@ -88,13 +91,13 @@ FNC4=DT_USB,MD0C;
 
 0.Raspberry Piの準備
 ```ini
-【ターゲット設備】
+【ターゲット設備(指定以外は動作保証なし)】
 	Raspberry 3B+
-	3.5inch LCD 480x320タッチパネル・ディスプレイ
+	3.5inch LCD 480x320タッチパネル・ディスプレイ(ADS7846ドライバー)
 	microSD 16GB以上
 
 【OSインストール】
-	Raspberry Pi OS Lite(64bit) 0.4GB版　　←　タッチを使う場合はRaspberry Pi OS(64bit) Desktop (Recommended)
+	Raspberry Pi OS Lite(64bit) 0.4GB版　　←　Desktop版は使わない 
 	OSをmicroSDに焼く前に初期設定を行う。設定は全て任意です。
 	raspberry pi imager(macOS版) の場合は下記の通り
 	ホスト名：toymeter 
@@ -112,6 +115,7 @@ FNC4=DT_USB,MD0C;
 	
 【環境更新】
 	sudo apt update
+	apt list --upgradable
 	sudo apt upgrade
 
 【Gitインストール】
@@ -155,6 +159,32 @@ sudo nano /etc/systemd/system/toy_meter.service
 Description=Toy Meter for YAESU FTDX10
 [Service]
 ExecStart=/home/pi/toy_meter/toy_meter -platform linuxfb
+Environment=QT_QPA_PLATFORM=linuxfb
+Restart=always
+User=pi
+Group=pi
+[Install]
+WantedBy=default.target
+
+sudo systemctl enable toy_meter
+
+```
+3.ソースコードで動かしたい場合は以下を参照：
+```ini
+sudo apt update
+	sudo apt install -y python3 python3-pyqt6 python3-serial python3-pip libqt6gui6 libqt6core6 libqt6widgets6 qt6-qpa-plugins libegl1-mesa
+
+cd
+git clone 現在調整中
+cd toy_meter
+nano toy_meter.conf
+python3 toy_meter.py
+
+sudo nano /etc/systemd/system/toy_meter.service
+[Unit]
+Description=Toy Meter for YAESU FTDX10
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/toy_meter/toy_meter.py -platform linuxfb
 Environment=QT_QPA_PLATFORM=linuxfb
 Restart=always
 User=pi
