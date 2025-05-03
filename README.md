@@ -9,7 +9,7 @@
 YAESU無線機向けの簡易メーターアプリケーションです。以下のプラットフォームに対応しています：
 
 - **Raspberry Pi OS Lite (64bit)** + 3.5inch LCD (480x320) タッチスクリーン機能使う場合、ドライバーはADS7846に限る
-- **macOS 12 Monterey 以降**
+- **macOS 12 Monterey 以降** ただしApple siliconの場合、Rosettaが必要
 - **Windows 11**
 
 ## 🎛️ 対応機能
@@ -172,7 +172,7 @@ sudo systemctl enable toy_meter
 3.ソースコードで動かしたい場合は以下を参照：
 ```ini
 sudo apt update
-	sudo apt install -y python3 python3-pyqt6 python3-serial python3-pip libqt6gui6 libqt6core6 libqt6widgets6 qt6-qpa-plugins libegl1-mesa
+sudo apt install -y python3 python3-pyqt6 python3-serial python3-pip libqt6gui6 libqt6core6 libqt6widgets6 qt6-qpa-plugins libegl1-mesa python3-evdev evtest
 
 cd
 git clone 現在調整中
@@ -208,6 +208,7 @@ ls -l /dev/cu.*
 /dev/cu.usbserial-1410
 /dev/cu.SLAB_USBtoUART
 → 対象デバイスのポート名を確認してください。
+
 ```
 
 ## 🪟 Windows 11 で利用
