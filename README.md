@@ -2,6 +2,8 @@
 
 本ソフトウェアは、YAESU FTDX10 / FT710 / FT891 / FT991 向けの簡易メーターです。
 
+<img width="320" alt="440089481-ddf3ee12-91fd-4ab5-ace4-b9f3e495ad69" src="https://github.com/user-attachments/assets/247e7e73-363f-4f81-a1a4-877635d10e34" />
+
 本ソフトウェアの使用条件については、リポジトリ内の `LICENSE` ファイルをご参照ください。
 
 > ⚠️ **注意：本アプリケーションは現在評価中です。**
@@ -22,7 +24,7 @@ YAESU無線機向けの簡易メーターアプリケーションです。以下
 
 ### デジタルメーター部
 - `FA/FB`（周波数）
-- `TIME`（UTC / JST 表示）
+- `TIME`（UTC / JST 表示）　← Time Zone切替不可
 
 ### ボタン部
 - CATコマンドを最大4つまで自由に登録可能(ただし、応答を期待するコマンドは使えない)
@@ -48,11 +50,12 @@ YAESU無線機向けの簡易メーターアプリケーションです。以下
 #
 # SERIAL_PORTはリグおよびPCの設定を一致させてください。N82フロー無しです。
 #	Raspi /dev/ttyUSB0など、 macOS /dev/cu.xxxxxxなど、 Win32 COMxなど
-# SERIAL_PORT_DLはDual UART用に準備された物ですが、2つ目のポートとして指定できます。
+# SERIAL_PORT_DLはmacOS 15以前でDual UART用に準備された物ですが、それ以外でも2つ目のポートとして指定できます。
+#	SERIAL_PORTで通信が失敗したとき、このポートで通信を試みる仕組みです。
 #	macOS /dev/cu.SLAB_USBtoUART または /dev/cu.SLAB_USBtoUART1など
 #       同時に２つのポートは使えません。
 # SCAN_SPは通信ポート読み出し周期です。0.01〜0.1の間で数字が小さいほど高速周期です。
-# 	推奨値:FTDX10=0.02 , FT770=xxx , FT891=0.1 , FT991=0.1
+# 	推奨値:FTDX10=0.02 , FT710=xxx , FT891=0.1 , FT991=0.1
 # FNCxはCATコマンド発行機能です。
 #	第1パラメーターはLabel(6文字)、第2パラメーターはCommandになっています。
 #	CAT仕様書が理解できる方のみ使ってください。設定ミスは設備の破損に繋がります！！
@@ -65,9 +68,9 @@ SERIAL_PORT_DL=/dev/cu.SLAB_USBtoUART1
 BAUD_RATE=38400
 SCAN_SP=0.02
 FNC1=_MAIN_,BD0;
-FNC2=_SUB__,BD1;
-FNC3=__FM__,MD04;
-FNC4=DT_USB,MD0C;
+FNC2=__FM__,MD04;
+FNC3=DT_USB,MD0C;
+FNC4=_ATAS_,EX0301052;
 ```
 ```makedown
 | パラメータ      | 説明                             	        |
@@ -91,13 +94,13 @@ FNC4=DT_USB,MD0C;
 
 0.Raspberry Piの準備
 ```ini
-【ターゲット設備(指定以外は動作保証なし)】
+【ターゲット設備(指定以外は動作実績なし)】
 	Raspberry 3B+
 	3.5inch LCD 480x320タッチパネル・ディスプレイ(ADS7846ドライバー)
 	microSD 16GB以上
 
 【OSインストール】
-	Raspberry Pi OS Lite(64bit) 0.4GB版　　←　Desktop版は使わない 
+	Raspberry Pi OS Lite(64bit) 0.4GB版　(2025年4月時点)　←　Desktop版は使わない 
 	OSをmicroSDに焼く前に初期設定を行う。設定は全て任意です。
 	raspberry pi imager(macOS版) の場合は下記の通り
 	ホスト名：toymeter 
@@ -156,7 +159,7 @@ cd toy_meter
 sudo nano /etc/systemd/system/toy_meter.service
 
 [Unit]
-Description=Toy Meter for YAESU FTDX10
+Description=Toy Meter for YAESU
 [Service]
 ExecStart=/home/pi/toy_meter/toy_meter -platform linuxfb
 Environment=QT_QPA_PLATFORM=linuxfb
@@ -182,7 +185,7 @@ python3 toy_meter.py
 
 sudo nano /etc/systemd/system/toy_meter.service
 [Unit]
-Description=Toy Meter for YAESU FTDX10
+Description=Toy Meter for YAESU
 [Service]
 ExecStart=/usr/bin/python3 /home/pi/toy_meter/toy_meter.py -platform linuxfb
 Environment=QT_QPA_PLATFORM=linuxfb
@@ -207,6 +210,7 @@ ls -l /dev/cu.*
 
 /dev/cu.usbserial-1410
 /dev/cu.SLAB_USBtoUART
+/dev/cu.usbserial-00F8CAF30
 → 対象デバイスのポート名を確認してください。
 
 ```
@@ -223,7 +227,7 @@ Windowsツール → コンピュータの管理 → デバイスマネージャ
 ```
 
 ## 📩 お問い合わせ・バグ報告
-現在はお受けしていません。
+お受けしていません。
 
 ## 📝 ライセンス
 LICENSE ファイル参照
