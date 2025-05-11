@@ -68,9 +68,9 @@ SERIAL_PORT_DL=/dev/cu.SLAB_USBtoUART1
 BAUD_RATE=38400
 SCAN_SP=0.02
 FNC1=_MAIN_,BD0;
-FNC2=__FM__,MD04;
-FNC3=DT_USB,MD0C;
-FNC4=_ATAS_,EX0301052;
+FNC2=_SUB__,BD1;
+FNC3=__FM__,MD04;
+FNC4=DT_USB,MD0C;
 ```
 ```makedown
 | パラメータ      | 説明                             	        |
