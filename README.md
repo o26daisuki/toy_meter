@@ -2,7 +2,7 @@
 
 本ソフトウェアは、YAESU FTDX10 / FT710 / FT891 / FT991 向けの簡易メーターです。
 
-<img width="320" alt="440089481-ddf3ee12-91fd-4ab5-ace4-b9f3e495ad69" src="https://github.com/user-attachments/assets/247e7e73-363f-4f81-a1a4-877635d10e34" />
+<img width="316" alt="スクリーンショット 2025-05-17 14 50 49" src="https://github.com/user-attachments/assets/61bfb2b7-79c4-4a4d-9c0f-1e17f1a23f1d" />
 
 本ソフトウェアの使用条件については、リポジトリ内の `LICENSE` ファイルをご参照ください。
 
@@ -27,7 +27,7 @@ YAESU無線機向けの簡易メーターアプリケーションです。以下
 - `TIME`（UTC / JST 表示）　← Time Zone切替不可
 
 ### ボタン部
-- CATコマンドを最大4つまで自由に登録可能(ただし、応答を期待するコマンドは使えない)
+- CATコマンドを最大4つまで自由に登録可能(応答を期待するコマンドは使えない)　← おまけ機能なので、初期設定ファイルのSCAN_SPが遅いと使いづらい
 - POメータ横のWを押すとAuto-Tune開始
 - 右下JP1RXQを押すとConfig設定開始
 
@@ -50,14 +50,16 @@ YAESU無線機向けの簡易メーターアプリケーションです。以下
 #
 # SERIAL_PORTはリグおよびPCの設定を一致させてください。N82フロー無しです。
 #	Raspi /dev/ttyUSB0など、 macOS /dev/cu.xxxxxxなど、 Win32 COMxなど
-# SERIAL_PORT_DLはmacOS 15以前でDual UART用に準備された物ですが、それ以外でも2つ目のポートとして指定できます。
-#	SERIAL_PORTで通信が失敗したとき、このポートで通信を試みる仕組みです。
+#
+# SERIAL_PORT_DLはDual UART用に準備された物ですが、2つ目のポートとして指定できます。
 #	macOS /dev/cu.SLAB_USBtoUART または /dev/cu.SLAB_USBtoUART1など
-#       同時に２つのポートは使えません。
+#       同時に２つのポート(リグ)は使えません。
+#
 # SCAN_SPは通信ポート読み出し周期です。0.01〜0.1の間で数字が小さいほど高速周期です。
 # 	推奨値:FTDX10=0.02 , FT710=xxx , FT891=0.1 , FT991=0.1
-# FNCxはCATコマンド発行機能です。
-#	第1パラメーターはLabel(6文字)、第2パラメーターはCommandになっています。
+#
+# FNCxはCATコマンド発行機能です(おまけ機能)。
+#	第1パラメーターはLabel(6文字)、第2パラメーターはCATコマンドになっています。
 #	CAT仕様書が理解できる方のみ使ってください。設定ミスは設備の破損に繋がります！！
 #	ご自身でリグに合わせて４つまで設定可能です。
 #	Read系のCATコマンド発行できても応答は拾えません(使えません)。
@@ -66,7 +68,7 @@ YAESU無線機向けの簡易メーターアプリケーションです。以下
 SERIAL_PORT=/dev/cu.usbserial-1410
 SERIAL_PORT_DL=/dev/cu.SLAB_USBtoUART1
 BAUD_RATE=38400
-SCAN_SP=0.02
+SCAN_SP=0.1
 FNC1=_MAIN_,BD0;
 FNC2=_SUB__,BD1;
 FNC3=__FM__,MD04;
