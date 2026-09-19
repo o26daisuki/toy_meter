@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+
+<html lang="sv">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body {
+    background: white;
+    color: black;
+}
+
+body {
+    font-family: "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #222;
+}
+
+h1 {
+    border-bottom: 2px solid #4a90e2;
+}
+
+h2 {
+    background: #eef5ff;
+    padding: 6px;
+}
+
+h3 {
+    color: #1f4e79;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+.note {
+    background: #fff7d6;
+    border-left: 5px solid #f0c000;
+    padding: 10px;
+}
+
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+</style>
+
+<title>toy_meter Version 2.0 Setup Utility</title>
+
+</head>
+
+<body>
+
+<h1>toy_meter Version 2.0</h1>
+
+<p><b>Setup Utility</b></p>
+
+<h2>Översikt</h2>
+
+<p>
+toy_meter är ett enkelt mätarprogram som visar driftstatus för en amatörradio.
+</p>
+
+<p>
+Det visar SIG-, PO-, SWR- och ALC-mätare via Hamlib.
+</p>
+
+<h2>Huvudfunktioner</h2>
+
+<table>
+
+<tr>
+<th>Funktion</th>
+<th>Innehåll</th>
+</tr>
+
+<tr>
+<td>Mätare</td>
+<td>SIG / PO / SWR / ALC</td>
+</tr>
+
+<tr>
+<td>VFO-visning</td>
+<td>Visning av aktiv VFO-frekvens (stöd för under 1000 MHz)</td>
+</tr>
+
+<tr>
+<td>TID-visning</td>
+<td>UTC / Lokal tid</td>
+</tr>
+
+<tr>
+<td>FNC</td>
+<td>Skickar nya YAESU CAT-kommandon</td>
+</tr>
+
+<tr>
+<td>Korrigering</td>
+<td>Korrigering av PO / ALC-mätare</td>
+</tr>
+
+<tr>
+<td>Serverfunktion</td>
+<td>Stöd för serveranslutning via Hamlib rigctld</td>
+</tr>
+
+</table>
+
+<h2>Egenskaper</h2>
+
+<ul>
+
+<li>Fungerar med Hamlib rigctld</li>
+
+<li>Stöd för två anslutningstyper: USB Serial(Server) / Network rigctld(Client)</li>
+
+<li>Stöd för korrigering av PO / ALC-mätare</li>
+
+<li>Kompatibel med macOS / Windows 11 / Raspberry Pi OS / Linux</li>
+
+</ul>
+
+<div class="note">
+
+<b>Observera</b>
+
+<ul>
+
+<li>
+Detta program är inte ett mätinstrument utan en hjälpmätare.
+</li>
+
+<li>
+Om andra applikationer eller datorer ansluter till Hamlib rigctld,
+använd <b>Network rigctld</b> i Connection Type.
+</li>
+
+</ul>
+
+</div>
+
+<h2>USB(Server)-läge</h2>
+
+<p>
+I USB Serial(Server)-läge startar toy_meter Hamlib rigctld på den lokala datorn och kommunicerar med radion.
+</p>
+
+<h3>Användning av flera toy_meter på samma dator</h3>
+
+<p>
+På samma dator kan upp till <b>4</b> instanser av toy_meter köras samtidigt i USB(Server)-läge.
+</p>
+
+<p>
+Tillgängliga portnummer är följande:
+</p>
+
+<table>
+
+<tr>
+<th>toy_meter</th>
+<th>PORT</th>
+</tr>
+
+<tr>
+<td>1:a instansen</td>
+<td>4532</td>
+</tr>
+
+<tr>
+<td>2:a instansen</td>
+<td>4534</td>
+</tr>
+
+<tr>
+<td>3:e instansen</td>
+<td>4536</td>
+</tr>
+
+<tr>
+<td>4:e instansen</td>
+<td>4538</td>
+</tr>
+
+</table>
+
+<p>
+Om flera radion används samtidigt på samma dator,
+använd olika portnummer för varje radio.
+</p>
+
+<h3>Hur man startar flera toy_meter</h3>
+
+<p>
+För att använda flera toy_meter, kopiera programmet
+och ge varje kopia ett eget filnamn.
+</p>
+
+<p>Du kan till exempel namnge dem efter radion:</p>
+
+<pre>
+toy_meter_FTDX10
+toy_meter_FT818
+toy_meter_FT857
+toy_meter_FTDX101
+</pre>
+
+<p>
+I varje toy_meter ställer du in radio, serieport,
+kommunikationshastighet och rigctld-portnummer individuellt.
+</p>
+
+<div class="note">
+
+<b>Observera</b>
+
+<p>
+Samma serieport kan inte användas av flera toy_meter.
+Anslut varje toy_meter till en separat radio och serieport.
+</p>
+
+</div>
+
+<h3>Kontrollera portnumret som används</h3>
+
+<p>
+När flera toy_meter startas,
+kan du kontrollera numret på den port som används för närvarande i <b>mätarpanelens titel [USB:453x]</b>.
+</p>
+
+<p>
+Överst på panelen visas till exempel:
+</p>
+
+<pre>
+ToyMeter V2.0 [USB:4532]
+</pre>
+
+<p>
+Detta visar vilken USB(Server)-port som används av varje instans.
+</p>
+
+<h2>SETUP (Inställningar)</h2>
+
+<h3>Connection Type (Anslutningstyp)</h3>
+
+<table>
+
+<tr>
+<th>Post</th>
+<th>Beskrivning</th>
+</tr>
+
+<tr>
+<td>USB Serial (Server)</td>
+<td>
+När en USB-ansluten radio styrs via rigctld på den lokala datorn.
+toy_meter startar rigctld.
+</td>
+</tr>
+
+<tr>
+<td>Network rigctld (Client)</td>
+<td>
+När anslutning sker via nätverk till en annan dator som kör Hamlib rigctld.
+</td>
+</tr>
+
+</table>
+
+<h3>Radio Setting (Radioinställningar)</h3>
+
+<table>
+
+<tr>
+<th>Post</th>
+<th>Beskrivning.1</th>
+<th>Beskrivning.2</th>
+</tr>
+
+<tr>
+<td>MFG / MODEL / RF POWER RANGE</td>
+<td>Ställ in enligt radion</td>
+<td></td>
+</tr>
+
+<tr>
+<td rowspan="3">OPERATING MODE</td>
+<td>Normal</td>
+<td>Normal drift</td>
+</tr>
+
+<tr>
+<td>Monitor</td>
+<td>
+Visar tillgängliga mätarfunktioner i grönt.
+Används även för korrigering av PO / ALC-mätare.
+I USB(Server)-läge kan du kontrollera portnumret.
+</td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td>
+Endast för felsökning (kan ge långsammare respons)
+</td>
+</tr>
+
+</table>
+
+<h3>RF REFERENCE (PO-mätarkorrigering)</h3>
+
+<table>
+
+<tr>
+<th>Post</th>
+<th>Procedur</th>
+</tr>
+
+<tr>
+<td rowspan="4">RF REFERENCE</td>
+<td>STEP-1. Ställ OPERATING MODE till Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Sänd med 25% av maximal effekt (FM-läge rekommenderas)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Klicka på den gröna “PO” för korrigering
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Justera korrigeringsvärdet manuellt vid behov
+(steg 1–3 är inte obligatoriska)
+</td>
+</tr>
+
+</table>
+
+<h3>ALC REFERENCE (ALC-mätarkorrigering)</h3>
+
+<table>
+
+<tr>
+<th>Post</th>
+<th>Procedur</th>
+</tr>
+
+<tr>
+<td rowspan="4">ALC REFERENCE</td>
+<td>STEP-1. Ställ OPERATING MODE till Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Sänd så att ALC-värdet ligger strax under den övre gränsen
+(WSJT-X rekommenderas)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Klicka på den gröna “ALC” för korrigering
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Justera korrigeringsvärdet manuellt vid behov
+(steg 1–3 är inte obligatoriska)
+</td>
+</tr>
+
+</table>
+
+<p>
+Nedan visas ett exempel på ALC-mätaren på radion.
+Justera så att nålen ligger strax ovanför ▲-markeringen.
+</p>
+
+<p>
+<img src="ALC.png" alt="ALC Meter" width="200">
+</p>
+
+<p>
+<b>Observera:</b>
+PO / ALC-mätare varierar mycket beroende på radiomodell.
+Använd dem endast som riktlinje.
+</p>
+
+<h3>Serial Port Setting (Serieportsinställningar)</h3>
+
+<table>
+
+<tr>
+<th>Post</th>
+<th>Beskrivning.1</th>
+<th>Beskrivning.2</th>
+</tr>
+
+<tr>
+<td>
+SERIAL PORT / BAUD RATE / DATA BITS / PARITY / STOP BITS / FLOW CONTROL
+</td>
+<td>Ställ in enligt radion</td>
+<td></td>
+</tr>
+
+<tr>
+<td>SCAN_SP</td>
+<td>0.1 〜 0.5</td>
+<td>
+Lägre värde ger snabbare nålrespons.
+För äldre datorer och radioapparater rekommenderas ett högre värde.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Observera:</b>
+Vid kommunikationsfel öppnas inställningsskärmen automatiskt.
+</p>
+
+<h3>Network rigctld (Nätverksanslutning)</h3>
+
+<table>
+
+<tr>
+<th>Post</th>
+<th>Beskrivning.1</th>
+<th>Beskrivning.2</th>
+</tr>
+
+<tr>
+<td>HOST</td>
+<td>IP ADDRESS</td>
+<td>
+IP-adress för datorn (Server) som kör Hamlib rigctld.
+Vid lokal användning: lämna tomt eller använd 127.0.0.1.
+</td>
+</tr>
+
+<tr>
+<td>PORT</td>
+<td>PORT NO</td>
+<td>
+Portnummer för datorn (Server) som kör Hamlib rigctld.
+Standard är 4532.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Referens:</b>
+Vid användning av Server-läge ska toy_meter på serversidan
+ha Connection Type inställt på USB Serial(Server).
+I klientapplikationen anger du IP-adress och portnummer för datorn
+där toy_meter körs.
+</p>
+
+<p>
+Exempel:
+</p>
+
+<pre>
+192.168.1.100:4532
+</pre>
+
+<h3>Custom Functions (Anpassade funktioner)</h3>
+
+<table>
+
+<tr>
+<th>Post</th>
+<th>Beskrivning.1</th>
+<th>Beskrivning.2</th>
+</tr>
+
+<tr>
+<td rowspan="2">FNCx</td>
+<td>Första parametern</td>
+<td>Visningsetikett (max 7 tecken)</td>
+</tr>
+
+<tr>
+<td>Andra parametern</td>
+<td>Styrkommando (max 16 tecken)</td>
+</tr>
+
+</table>
+
+<p>
+<b>Observera:</b>
+Denna funktion är implementerad för nya YAESU CAT-kommandon.
+Funktion med andra radioapparater garanteras inte.
+</p>
+
+<ul>
+
+<li>
+Stöder inte kommandon som kräver svar.
+</li>
+
+<li>
+Om kommandot tar lång tid kan inställningsskärmen öppnas.
+Användning av sådana kommandon rekommenderas inte.
+</li>
+
+<li>
+Använd endast om du förstår radioapparatens kommunikationsspecifikationer (CAT-kommandon).
+</li>
+
+</ul>
+
+<h3>Setup & Exit (Inställningar och avslutning)</h3>
+
+<table>
+
+<tr>
+<th>Post</th>
+<th>Beskrivning</th>
+</tr>
+
+<tr>
+<td>Nedre högra hörnet JP1RXQ</td>
+<td>Inställningsskärm (Setup)</td>
+</tr>
+
+<tr>
+<td>Övre vänstra hörnet S</td>
+<td>
+Avsluta (endast för Raspberry Pi 320×480-skärm)
+</td>
+</tr>
+
+<tr>
+<td>Övre högra hörnet W</td>
+<td>
+TUNE (endast för nya YAESU CAT-kommandon)
+</td>
+</tr>
+
+</table>
+
+<h2>Kompatibel miljö</h2>
+
+<p>
+Hamlib / rigctld krävs för kommunikation med transceivern.
+</p>
+
+<h2>Rekommenderade inställningar</h2>
+
+<table>
+
+<tr>
+<th>Miljö</th>
+<th>Rekommenderat SCAN_SP-värde</th>
+</tr>
+
+<tr>
+<td>Apple Silicon</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Windows 11</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Raspberry Pi 3B+</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Anslutningshastighet 9600bps</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Anslutningshastighet 38400bps</td>
+<td>0.1 〜 0.3</td>
+</tr>
+
+</table>
+
+<h2>Ansvarsfriskrivning</h2>
+
+<ul>
+
+<li>
+Författaren ansvarar inte för skador eller dataförlust som uppstår vid användning av detta program.
+</li>
+
+<li>
+License: MPL 2.0, men kommersiell användning är förbjuden
+</li>
+
+<li>
+Använd på egen risk.
+</li>
+
+</ul>
+
+<hr>
+
+<p style="text-align:right">
+
+<b>Utveckling: JP1RXQ</b>
+
+Utvärdering: JR2ANC / 7K1AEU
+
+</p>
+
+</body>
+
+</html>

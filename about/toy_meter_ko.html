@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body {
+    background: white;
+    color: black;
+}
+
+body {
+    font-family: "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #222;
+}
+
+h1 {
+    border-bottom: 2px solid #4a90e2;
+}
+
+h2 {
+    background: #eef5ff;
+    padding: 6px;
+}
+
+h3 {
+    color: #1f4e79;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+.note {
+    background: #fff7d6;
+    border-left: 5px solid #f0c000;
+    padding: 10px;
+}
+
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+</style>
+
+<title>toy_meter Version 2.0 Setup Utility</title>
+
+</head>
+
+<body>
+
+<h1>toy_meter Version 2.0</h1>
+
+<p><b>Setup Utility</b></p>
+
+<h2>개요</h2>
+
+<p>
+toy_meter는 아마추어 무선기의 운용 상태를 표시하는 간단한 미터 애플리케이션입니다.
+</p>
+
+<p>
+Hamlib를 통해 SIG, PO, SWR, ALC 미터를 표시합니다.
+</p>
+
+<h2>주요 기능</h2>
+
+<table>
+
+<tr>
+<th>기능</th>
+<th>내용</th>
+</tr>
+
+<tr>
+<td>미터</td>
+<td>SIG / PO / SWR / ALC</td>
+</tr>
+
+<tr>
+<td>VFO 표시</td>
+<td>운용 중인 VFO 주파수 표시 (1000MHz 미만 지원)</td>
+</tr>
+
+<tr>
+<td>TIME 표시</td>
+<td>UTC / 로컬 시간</td>
+</tr>
+
+<tr>
+<td>FNC</td>
+<td>YAESU 신규 CAT 명령 전송</td>
+</tr>
+
+<tr>
+<td>보정</td>
+<td>PO / ALC 미터 보정</td>
+</tr>
+
+<tr>
+<td>서버 기능</td>
+<td>Hamlib rigctld를 이용한 서버 연결 지원</td>
+</tr>
+
+</table>
+
+<h2>특징</h2>
+
+<ul>
+
+<li>Hamlib rigctld를 이용하여 동작</li>
+
+<li>USB Serial(Server) / Network rigctld(Client) 두 가지 연결 방식 지원</li>
+
+<li>PO / ALC 미터 보정 지원</li>
+
+<li>macOS / Windows 11 / Raspberry Pi OS / Linux 지원</li>
+
+</ul>
+
+<div class="note">
+
+<b>주의</b>
+
+<ul>
+
+<li>
+본 소프트웨어는 측정기가 아닌 보조 미터입니다.
+</li>
+
+<li>
+다른 애플리케이션이나 PC에서 Hamlib rigctld에 접속하는 경우,
+Connection Type에서 <b>Network rigctld</b>를 사용하십시오.
+</li>
+
+</ul>
+
+</div>
+
+<h2>USB(Server) 모드</h2>
+
+<p>
+USB Serial(Server) 모드에서는 toy_meter가 로컬 PC에서 Hamlib rigctld를 실행하여 무선기와 통신합니다.
+</p>
+
+<h3>동일 PC에서 여러 toy_meter 사용하기</h3>
+
+<p>
+동일 PC에서는 USB(Server) 모드의 toy_meter를 최대 <b>4개</b>까지 동시에 실행할 수 있습니다.
+</p>
+
+<p>
+사용 가능한 포트 번호는 다음과 같습니다.
+</p>
+
+<table>
+
+<tr>
+<th>toy_meter</th>
+<th>PORT</th>
+</tr>
+
+<tr>
+<td>1대</td>
+<td>4532</td>
+</tr>
+
+<tr>
+<td>2대</td>
+<td>4534</td>
+</tr>
+
+<tr>
+<td>3대</td>
+<td>4536</td>
+</tr>
+
+<tr>
+<td>4대</td>
+<td>4538</td>
+</tr>
+
+</table>
+
+<p>
+동일 PC에서 여러 무선기를 동시에 모니터링하는 경우,
+각각 다른 포트 번호를 사용하십시오.
+</p>
+
+<h3>여러 toy_meter를 실행하는 방법</h3>
+
+<p>
+여러 toy_meter를 사용하려면 프로그램을 복사하여
+각각 원하는 파일명을 지정해 사용할 수 있습니다.
+</p>
+
+<p>예를 들어, 다음과 같이 무선기 이름을 붙일 수 있습니다.</p>
+
+<pre>
+toy_meter_FTDX10
+toy_meter_FT818
+toy_meter_FT857
+toy_meter_FTDX101
+</pre>
+
+<p>
+각 toy_meter에서 무선기, 시리얼 포트,
+통신 속도, rigctld 포트 번호 등을 개별적으로 설정하여 사용합니다.
+</p>
+
+<div class="note">
+
+<b>주의</b>
+
+<p>
+동일한 시리얼 포트를 여러 toy_meter에서 사용할 수 없습니다.
+각 toy_meter는 서로 다른 무선기 및 시리얼 포트에 연결해야 합니다.
+</p>
+
+</div>
+
+<h3>사용 중인 포트 번호 확인하기</h3>
+
+<p>
+여러 개의 toy_meter를 실행한 경우,
+<b>미터 패널 제목의 [USB:453x]</b>에서 현재 사용 중인 포트 번호를 확인할 수 있습니다.
+</p>
+
+<p>
+패널 상단의 제목에 다음과 같이 표시됩니다.
+</p>
+
+<pre>
+ToyMeter V2.0 [USB:4532]
+</pre>
+
+<p>
+이를 통해 현재 동작 중인 toy_meter가 어떤 USB(Server) 포트를 사용 중인지 확인할 수 있습니다.
+</p>
+
+<h2>SETUP (설정)</h2>
+
+<h3>Connection Type (접속 방식)</h3>
+
+<table>
+
+<tr>
+<th>항목</th>
+<th>설명</th>
+</tr>
+
+<tr>
+<td>USB Serial (Server)</td>
+<td>
+USB로 연결된 무선기를 로컬 PC의 rigctld로 제어하는 경우.
+toy_meter가 rigctld를 실행합니다.
+</td>
+</tr>
+
+<tr>
+<td>Network rigctld (Client)</td>
+<td>
+다른 PC에서 동작 중인 Hamlib rigctld에
+네트워크를 통해 접속하는 경우.
+</td>
+</tr>
+
+</table>
+
+<h3>Radio Setting (무선기 설정)</h3>
+
+<table>
+
+<tr>
+<th>항목</th>
+<th>설명.1</th>
+<th>설명.2</th>
+</tr>
+
+<tr>
+<td>MFG / MODEL / RF POWER RANGE</td>
+<td>무선기에 맞게 설정</td>
+<td></td>
+</tr>
+
+<tr>
+<td rowspan="3">OPERATING MODE</td>
+<td>Normal</td>
+<td>일반 운용</td>
+</tr>
+
+<tr>
+<td>Monitor</td>
+<td>
+사용 가능한 미터 기능을 녹색으로 확인합니다.
+PO / ALC 미터 보정에도 사용합니다.
+또한 USB(Server) 모드에서는 사용 중인 포트 번호를 확인할 수 있습니다.
+</td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td>
+디버그 전용 (사용 시 응답이 느려질 수 있음)
+</td>
+</tr>
+
+</table>
+
+<h3>RF REFERENCE (PO 미터 보정)</h3>
+
+<table>
+
+<tr>
+<th>항목</th>
+<th>절차</th>
+</tr>
+
+<tr>
+<td rowspan="4">RF REFERENCE</td>
+<td>STEP-1. OPERATING MODE를 Monitor로 설정</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. 최대 출력의 25%로 송신 (FM 모드 권장)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. 녹색 “PO”를 클릭하여 보정
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. 필요 시 보정 값을 직접 조정
+(1〜3단계를 수행하지 않아도 설정 가능)
+</td>
+</tr>
+
+</table>
+
+<h3>ALC REFERENCE (ALC 미터 보정)</h3>
+
+<table>
+
+<tr>
+<th>항목</th>
+<th>절차</th>
+</tr>
+
+<tr>
+<td rowspan="4">ALC REFERENCE</td>
+<td>STEP-1. OPERATING MODE를 Monitor로 설정</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. 무선기 ALC 적정 범위의 상한보다 약간 낮게 송신
+(WSJT-X 사용 권장)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. 녹색 “ALC”를 클릭하여 보정
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. 필요 시 보정 값을 직접 조정
+(1〜3단계를 수행하지 않아도 설정 가능)
+</td>
+</tr>
+
+</table>
+
+<p>
+아래는 무선기 ALC 미터의 이미지입니다.
+바늘이 ▲ 위치보다 약간 위에 오도록 조정합니다.
+</p>
+
+<p>
+<img src="ALC.png" alt="ALC Meter" width="200">
+</p>
+
+<p>
+<b>주의：</b>
+PO / ALC 미터는 무선기 기종에 따라 차이가 크므로
+참고용으로만 사용하십시오.
+</p>
+
+<h3>Serial Port Setting (시리얼 접속 설정)</h3>
+
+<table>
+
+<tr>
+<th>항목</th>
+<th>설명.1</th>
+<th>설명.2</th>
+</tr>
+
+<tr>
+<td>
+SERIAL PORT / BAUD RATE / DATA BITS / PARITY / STOP BITS / FLOW CONTROL
+</td>
+<td>무선기에 맞게 설정</td>
+<td></td>
+</tr>
+
+<tr>
+<td>SCAN_SP</td>
+<td>0.1 〜 0.5</td>
+<td>
+값이 작을수록 바늘의 응답성이 향상됩니다.
+오래된 PC·무선기에서는 큰 값을 권장합니다.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>주의：</b>
+통신 이상 시 Setup 화면이 자동으로 열립니다.
+</p>
+
+<h3>Network rigctld (네트워크 접속)</h3>
+
+<table>
+
+<tr>
+<th>항목</th>
+<th>설명.1</th>
+<th>설명.2</th>
+</tr>
+
+<tr>
+<td>HOST</td>
+<td>IP ADDRESS</td>
+<td>
+Hamlib rigctld 운용 중 PC(Server)의 IP 주소.
+Local 시에는 공백 또는 127.0.0.1.
+</td>
+</tr>
+
+<tr>
+<td>PORT</td>
+<td>PORT NO</td>
+<td>
+Hamlib rigctld 운용 중 PC(Server)의 PORT 번호.
+기본값은 4532.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>참고：</b>
+Server를 이용하는 경우 Server 측 toy_meter는
+Connection Type을 USB Serial(Server)로 설정합니다.
+접속하는 애플리케이션에서는 toy_meter가 동작하는 PC의
+IP 주소와 PORT 번호를 지정합니다.
+</p>
+
+<p>
+예：
+</p>
+
+<pre>
+192.168.1.100:4532
+</pre>
+
+<h3>Custom Functions (커스텀 기능)</h3>
+
+<table>
+
+<tr>
+<th>항목</th>
+<th>설명.1</th>
+<th>설명.2</th>
+</tr>
+
+<tr>
+<td rowspan="2">FNCx</td>
+<td>첫 번째 파라미터</td>
+<td>표시 라벨 (최대 7문자)</td>
+</tr>
+
+<tr>
+<td>두 번째 파라미터</td>
+<td>제어 명령 (최대 16문자)</td>
+</tr>
+
+</table>
+
+<p>
+<b>주의：</b>
+YAESU 신규 CAT 명령용으로 구현된 기능입니다.
+다른 무선기에서는 동작이 보장되지 않습니다.
+</p>
+
+<ul>
+
+<li>
+응답이 필요한 명령에는 대응하지 않습니다.
+</li>
+
+<li>
+명령 완료까지 시간이 오래 걸리는 경우,
+Setup 화면이 열릴 수 있습니다.
+이러한 명령 사용은 권장하지 않습니다.
+</li>
+
+<li>
+무선기의 통신 사양(CAT 명령)을 이해하는 사용자만 이용하십시오.
+</li>
+
+</ul>
+
+<h3>Setup & Exit (설정 및 종료)</h3>
+
+<table>
+
+<tr>
+<th>항목</th>
+<th>설명</th>
+</tr>
+
+<tr>
+<td>오른쪽 아래 JP1RXQ</td>
+<td>설정 (Setup) 화면</td>
+</tr>
+
+<tr>
+<td>왼쪽 위 S</td>
+<td>
+종료 (Raspberry Pi 320×480 디스플레이 전용)
+</td>
+</tr>
+
+<tr>
+<td>오른쪽 위 W</td>
+<td>
+TUNE (YAESU 신규 CAT 전용)
+</td>
+</tr>
+
+</table>
+
+<h2>지원 환경</h2>
+
+<p>
+무전기와 통신하려면 Hamlib / rigctld가 필요합니다.
+</p>
+
+<h2>참고 설정</h2>
+
+<table>
+
+<tr>
+<th>환경</th>
+<th>SCAN_SP 권장값</th>
+</tr>
+
+<tr>
+<td>Apple Silicon</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Windows 11</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Raspberry Pi 3B+</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>접속 속도 9600bps</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>접속 속도 38400bps</td>
+<td>0.1 〜 0.3</td>
+</tr>
+
+</table>
+
+<h2>면책 사항</h2>
+
+<ul>
+
+<li>
+본 소프트웨어 사용으로 인한 고장·데이터 손실 등에 대해 제작자는 책임을 지지 않습니다.
+</li>
+
+<li>
+License: MPL 2.0, 단 상업적 사용은 금지됩니다
+</li>
+
+<li>
+자기 책임 하에 이용하십시오.
+</li>
+
+</ul>
+
+<hr>
+
+<p style="text-align:right">
+
+<b>개발: JP1RXQ</b>
+
+평가: JR2ANC / 7K1AEU
+
+</p>
+
+</body>
+
+</html>

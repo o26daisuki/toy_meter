@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body {
+    background: white;
+    color: black;
+}
+
+body {
+    font-family: "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #222;
+}
+
+h1 {
+    border-bottom: 2px solid #4a90e2;
+}
+
+h2 {
+    background: #eef5ff;
+    padding: 6px;
+}
+
+h3 {
+    color: #1f4e79;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+.note {
+    background: #fff7d6;
+    border-left: 5px solid #f0c000;
+    padding: 10px;
+}
+
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+</style>
+
+<title>toy_meter Version 2.0 Setup Utility</title>
+
+</head>
+
+<body>
+
+<h1>toy_meter Version 2.0</h1>
+
+<p><b>Setup Utility</b></p>
+
+<h2>Résumé</h2>
+
+<p>
+toy_meter est une application de mesure simple qui affiche l’état de fonctionnement d’un émetteur-récepteur radioamateur.
+</p>
+
+<p>
+Elle affiche les indicateurs SIG, PO, SWR et ALC via Hamlib.
+</p>
+
+<h2>Fonctions principales</h2>
+
+<table>
+
+<tr>
+<th>Fonction</th>
+<th>Contenu</th>
+</tr>
+
+<tr>
+<td>Mesure</td>
+<td>SIG / PO / SWR / ALC</td>
+</tr>
+
+<tr>
+<td>Affichage VFO</td>
+<td>Affichage de la fréquence VFO en cours d’utilisation (compatible < 1000 MHz)</td>
+</tr>
+
+<tr>
+<td>Affichage TIME</td>
+<td>UTC / Heure locale</td>
+</tr>
+
+<tr>
+<td>FNC</td>
+<td>Envoi des nouveaux commandes CAT de YAESU</td>
+</tr>
+
+<tr>
+<td>Correction</td>
+<td>Correction des indicateurs PO / ALC</td>
+</tr>
+
+<tr>
+<td>Fonction serveur</td>
+<td>Compatible avec la connexion serveur utilisant Hamlib rigctld</td>
+</tr>
+
+</table>
+
+<h2>Caractéristiques</h2>
+
+<ul>
+
+<li>Fonctionne avec Hamlib rigctld</li>
+
+<li>Deux modes de connexion : USB Serial(Server) / Network rigctld(Client)</li>
+
+<li>Compatible avec la correction des indicateurs PO / ALC</li>
+
+<li>Compatible macOS / Windows 11 / Raspberry Pi OS / Linux</li>
+
+</ul>
+
+<div class="note">
+
+<b>Remarque</b>
+
+<ul>
+
+<li>
+Ce logiciel n’est pas un instrument de mesure, mais un indicateur auxiliaire.
+</li>
+
+<li>
+Si d’autres applications ou PC se connectent à Hamlib rigctld,
+utilisez <b>Network rigctld</b> dans Connection Type.
+</li>
+
+</ul>
+
+</div>
+
+<h2>Mode USB(Server)</h2>
+
+<p>
+En mode USB Serial(Server), toy_meter lance Hamlib rigctld sur le PC local et communique avec l’émetteur-récepteur.
+</p>
+
+<h3>Utilisation de plusieurs toy_meter sur le même PC</h3>
+
+<p>
+Sur un même PC, jusqu’à <b>4</b> instances de toy_meter en mode USB(Server) peuvent être exécutées simultanément.
+</p>
+
+<p>
+Les numéros de port disponibles sont les suivants :
+</p>
+
+<table>
+
+<tr>
+<th>toy_meter</th>
+<th>PORT</th>
+</tr>
+
+<tr>
+<td>1ère instance</td>
+<td>4532</td>
+</tr>
+
+<tr>
+<td>2ème instance</td>
+<td>4534</td>
+</tr>
+
+<tr>
+<td>3ème instance</td>
+<td>4536</td>
+</tr>
+
+<tr>
+<td>4ème instance</td>
+<td>4538</td>
+</tr>
+
+</table>
+
+<p>
+Si plusieurs émetteurs-récepteurs sont surveillés simultanément sur le même PC,
+utilisez un numéro de port différent pour chacun.
+</p>
+
+<h3>Comment lancer plusieurs toy_meter</h3>
+
+<p>
+Pour utiliser plusieurs toy_meter, copiez le programme et attribuez un nom de fichier différent à chaque copie.
+</p>
+
+<p>Par exemple, vous pouvez les nommer selon le modèle de l’émetteur-récepteur :</p>
+
+<pre>
+toy_meter_FTDX10
+toy_meter_FT818
+toy_meter_FT857
+toy_meter_FTDX101
+</pre>
+
+<p>
+Dans chaque toy_meter, configurez individuellement l’émetteur-récepteur, le port série,
+la vitesse de communication et le numéro de port rigctld.
+</p>
+
+<div class="note">
+
+<b>Remarque</b>
+
+<p>
+Un même port série ne peut pas être utilisé par plusieurs toy_meter.
+Connectez chaque toy_meter à un émetteur-récepteur et un port série distinct.
+</p>
+
+</div>
+
+<h3>Vérifier le numéro de port utilisé</h3>
+
+<p>
+Lorsque plusieurs instances de toy_meter sont lancées,
+vous pouvez vérifier le numéro du port actuellement utilisé dans le <b>titre du panneau du compteur [USB:453x]</b>.
+</p>
+
+<p>
+Le titre en haut du panneau affichera par exemple :
+</p>
+
+<pre>
+ToyMeter V2.0 [USB:4532]
+</pre>
+
+<p>
+Cela permet de vérifier quel port USB(Server) est utilisé par chaque instance.
+</p>
+
+<h2>SETUP (Paramètres)</h2>
+
+<h3>Connection Type (Type de connexion)</h3>
+
+<table>
+
+<tr>
+<th>Élément</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>USB Serial (Server)</td>
+<td>
+Pour contrôler un émetteur-récepteur connecté en USB via rigctld sur le PC local.
+toy_meter lance rigctld.
+</td>
+</tr>
+
+<tr>
+<td>Network rigctld (Client)</td>
+<td>
+Pour se connecter via réseau à un autre PC exécutant Hamlib rigctld.
+</td>
+</tr>
+
+</table>
+
+<h3>Radio Setting (Paramètres de l’émetteur-récepteur)</h3>
+
+<table>
+
+<tr>
+<th>Élément</th>
+<th>Description.1</th>
+<th>Description.2</th>
+</tr>
+
+<tr>
+<td>MFG / MODEL / RF POWER RANGE</td>
+<td>Configurer selon l’émetteur-récepteur</td>
+<td></td>
+</tr>
+
+<tr>
+<td rowspan="3">OPERATING MODE</td>
+<td>Normal</td>
+<td>Utilisation normale</td>
+</tr>
+
+<tr>
+<td>Monitor</td>
+<td>
+Affiche en vert les fonctions de mesure disponibles.
+Utilisé également pour la correction des indicateurs PO / ALC.
+En mode USB(Server), permet de vérifier le port utilisé.
+</td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td>
+Mode de débogage (peut ralentir la réponse)
+</td>
+</tr>
+
+</table>
+
+<h3>RF REFERENCE (Correction du PO)</h3>
+
+<table>
+
+<tr>
+<th>Élément</th>
+<th>Procédure</th>
+</tr>
+
+<tr>
+<td rowspan="4">RF REFERENCE</td>
+<td>STEP-1. Régler OPERATING MODE sur Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Transmettre à 25 % de la puissance maximale (mode FM recommandé)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Cliquer sur “PO” en vert pour corriger
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Ajuster manuellement la valeur de correction si nécessaire
+(les étapes 1–3 ne sont pas obligatoires)
+</td>
+</tr>
+
+</table>
+
+<h3>ALC REFERENCE (Correction du ALC)</h3>
+
+<table>
+
+<tr>
+<th>Élément</th>
+<th>Procédure</th>
+</tr>
+
+<tr>
+<td rowspan="4">ALC REFERENCE</td>
+<td>STEP-1. Régler OPERATING MODE sur Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Transmettre de manière à rester légèrement en dessous de la limite supérieure de la plage ALC de l’émetteur-récepteur
+(WSJT-X recommandé)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Cliquer sur “ALC” en vert pour corriger
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Ajuster manuellement la valeur de correction si nécessaire
+(les étapes 1–3 ne sont pas obligatoires)
+</td>
+</tr>
+
+</table>
+
+<p>
+Ci-dessous se trouve une image du indicateur ALC de l’émetteur-récepteur.
+Ajustez pour que l’aiguille soit légèrement au-dessus du repère ▲.
+</p>
+
+<p>
+<img src="ALC.png" alt="ALC Meter" width="200">
+</p>
+
+<p>
+<b>Remarque :</b>
+Les indicateurs PO / ALC varient fortement selon le modèle de l’émetteur-récepteur.
+Utilisez-les uniquement comme référence.
+</p>
+
+<h3>Serial Port Setting (Paramètres du port série)</h3>
+
+<table>
+
+<tr>
+<th>Élément</th>
+<th>Description.1</th>
+<th>Description.2</th>
+</tr>
+
+<tr>
+<td>
+SERIAL PORT / BAUD RATE / DATA BITS / PARITY / STOP BITS / FLOW CONTROL
+</td>
+<td>Configurer selon l’émetteur-récepteur</td>
+<td></td>
+</tr>
+
+<tr>
+<td>SCAN_SP</td>
+<td>0.1 〜 0.5</td>
+<td>
+Plus la valeur est faible, meilleure est la réactivité de l’aiguille.
+Pour les anciens PC ou émetteurs-récepteurs, une valeur plus élevée est recommandée.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Remarque :</b>
+En cas d’erreur de communication, l’écran de configuration s’ouvrira automatiquement.
+</p>
+
+<h3>Network rigctld (Connexion réseau)</h3>
+
+<table>
+
+<tr>
+<th>Élément</th>
+<th>Description.1</th>
+<th>Description.2</th>
+</tr>
+
+<tr>
+<td>HOST</td>
+<td>IP ADDRESS</td>
+<td>
+Adresse IP du PC(Server) exécutant Hamlib rigctld.
+En local, laisser vide ou utiliser 127.0.0.1.
+</td>
+</tr>
+
+<tr>
+<td>PORT</td>
+<td>PORT NO</td>
+<td>
+Numéro de port du PC(Server) exécutant Hamlib rigctld.
+Valeur par défaut : 4532.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Référence :</b>
+Lors de l’utilisation du mode Server, régler Connection Type sur USB Serial(Server) côté serveur.
+Dans l’application cliente, spécifier l’adresse IP et le numéro de port du PC exécutant toy_meter.
+</p>
+
+<p>
+Exemple :
+</p>
+
+<pre>
+192.168.1.100:4532
+</pre>
+
+<h3>Custom Functions (Fonctions personnalisées)</h3>
+
+<table>
+
+<tr>
+<th>Élément</th>
+<th>Description.1</th>
+<th>Description.2</th>
+</tr>
+
+<tr>
+<td rowspan="2">FNCx</td>
+<td>Premier paramètre</td>
+<td>Étiquette d’affichage (max. 7 caractères)</td>
+</tr>
+
+<tr>
+<td>Deuxième paramètre</td>
+<td>Commande de contrôle (max. 16 caractères)</td>
+</tr>
+
+</table>
+
+<p>
+<b>Remarque :</b>
+Fonction implémentée pour les nouveaux commandes CAT de YAESU.
+Aucune garantie de fonctionnement avec d’autres émetteurs-récepteurs.
+</p>
+
+<ul>
+
+<li>
+Non compatible avec les commandes nécessitant une réponse.
+</li>
+
+<li>
+Si le temps d’exécution d’une commande est long,
+l’écran de configuration peut s’ouvrir.
+L’utilisation de telles commandes n’est pas recommandée.
+</li>
+
+<li>
+À utiliser uniquement si vous comprenez les spécifications de communication (commandes CAT) de l’émetteur-récepteur.
+</li>
+
+</ul>
+
+<h3>Setup & Exit (Paramètres et sortie)</h3>
+
+<table>
+
+<tr>
+<th>Élément</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>En bas à droite JP1RXQ</td>
+<td>Écran de configuration (Setup)</td>
+</tr>
+
+<tr>
+<td>En haut à gauche S</td>
+<td>
+Quitter (réservé à l’écran Raspberry Pi 320×480)
+</td>
+</tr>
+
+<tr>
+<td>En haut à droite W</td>
+<td>
+TUNE (réservé aux nouveaux commandes CAT de YAESU)
+</td>
+</tr>
+
+</table>
+
+<h2>Environnement compatible</h2>
+
+<p>
+Hamlib / rigctld est requis pour la communication avec le transceiver.
+</p>
+
+<h2>Paramètres recommandés</h2>
+
+<table>
+
+<tr>
+<th>Environnement</th>
+<th>Valeur SCAN_SP recommandée</th>
+</tr>
+
+<tr>
+<td>Apple Silicon</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Windows 11</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Raspberry Pi 3B+</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Vitesse de connexion 9600bps</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Vitesse de connexion 38400bps</td>
+<td>0.1 〜 0.3</td>
+</tr>
+
+</table>
+
+<h2>Avertissement</h2>
+
+<ul>
+
+<li>
+L’auteur n’est pas responsable des dommages ou pertes de données causés par l’utilisation de ce logiciel.
+</li>
+
+<li>
+License: MPL 2.0, mais l’utilisation commerciale est interdite
+</li>
+
+<li>
+Utilisez-le sous votre propre responsabilité.
+</li>
+
+</ul>
+
+<hr>
+
+<p style="text-align:right">
+
+<b>Développement : JP1RXQ</b>
+
+Évaluation : JR2ANC / 7K1AEU
+
+</p>
+
+</body>
+
+</html>

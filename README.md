@@ -1,245 +1,422 @@
-# Toy Meter for YAESU FTDX10 / FT710 / FT891 / FT991
+# toy_meter
 
-本ソフトウェアは、YAESU FTDX10 / FT710 / FT891 / FT991 向けの簡易メーターです。
+**Radio Signal Power Meter using Hamlib / rigctld**
 
-<img width="316" alt="スクリーンショット 2025-05-17 14 50 49" src="https://github.com/user-attachments/assets/61bfb2b7-79c4-4a4d-9c0f-1e17f1a23f1d" />
+toy_meter is a simple meter application for amateur radio operation.
 
-本ソフトウェアの使用条件については、リポジトリ内の `LICENSE` ファイルをご参照ください。
+It uses Hamlib `rigctld` to communicate with supported transceivers and displays signal and operating information such as **SIG / PO / SWR / ALC**, as well as the operating frequency.
 
----
-## 🔽 ダウンロード
+**Version: 2.0**
 
-最新版バイナリーはこちらからダウンロードできます：
-
-👉 [v1.0 リリースページ](https://github.com/o26daisuki/toy_meter/releases/tag/v1.0)
+**Developer: JP1RXQ**
 
 ---
 
-YAESU無線機向けの簡易メーターアプリケーションは以下のプラットフォームに対応しています：
+## Features
 
-- **Raspberry Pi OS Lite (64bit)** + 3.5inch LCD (480x320) タッチスクリーン機能使う場合、ドライバーはADS7846に限る
-- **macOS 12 Monterey 以降** ただしApple siliconの場合、Rosettaが必要
-- **Windows 11**
+- SIG / PO / SWR / ALC meter display
+- Operating VFO frequency display
+- UTC / Local Time display
+- Custom FNC functions for YAESU CAT commands
+- PO / ALC reference calibration
+- USB Serial connection using Hamlib `rigctld`
+- Network connection to a remote `rigctld`
+- Multiple radio support
+- Support for small-display environments such as Raspberry Pi
+- Setup screen with Radio Parameters, About toy_meter, and Configuration Diagram
 
-## 🎛️ 対応機能
 
-### アナログメーター部
-- `SIG`（Signal メーター）
-- `PO`（Power メーター）
-- `SWR`（SWR メーター）
-- `ALC`（ALC メーター）
+## Meter Panel
 
-### デジタルメーター部
-- `FA/FB`（周波数）
-- `TIME`（UTC / JST 表示）　← Time Zone切替不可
+### Normal Mode
 
-### ボタン部
-- CATコマンドを最大4つまで自由に登録可能(応答を期待するコマンドは使えない)　← おまけ機能なので、初期設定ファイルのSCAN_SPが遅いと使いづらい
-- POメータ横のWを押すとAuto-Tune開始
-- 右下JP1RXQを押すとConfig設定開始
+![toy_meter Normal Mode](meter-img/README-normal.png)
 
-> ※ メーターの精度は ±10% 以内を目標としています。  
-> ※ メーターの針の動作速度は使用する無線機と利用環境によって異なります。
+The Normal mode is the standard display for everyday operation.
+
+### Monitor Mode
+
+![toy_meter Monitor Mode](meter-img/README-monitor.png)
+
+The Monitor mode provides additional information for setup,
+calibration, and troubleshooting. The `rigctld` port currently
+assigned to the USB Serial connection is also displayed in the
+meter panel title.
 
 ---
 
-## 🚀 起動手順
+## Connection
 
-### 設定ファイルについて
+toy_meter communicates with the transceiver through Hamlib `rigctld`.
 
-最初にアプリ起動後、通信異常が数秒続くと初期設定ファイルが自動で開きます。
+There are two connection modes.
 
-メーター運用中に設定を変えたい場合は右下のJP1RXQをクリックしてください。
+### USB Serial (Server)
 
-```ini
-# 修正後はアプリけーションの再起動を行ってください。
-# After making the correction, restart the application.
-#
-# SERIAL_PORTはリグおよびPCの設定を一致させてください。N82フロー無しです。
-#	Raspi /dev/ttyUSB0など、 macOS /dev/cu.xxxxxxなど、 Win32 COMxなど
-#
-# SERIAL_PORT_DLはDual UART用に準備された物ですが、2つ目のポートとして指定できます。
-#	macOS /dev/cu.SLAB_USBtoUART または /dev/cu.SLAB_USBtoUART1など
-#       同時に２つのポート(リグ)は使えません。
-#
-# SCAN_SPは通信ポート読み出し周期です。0.01〜0.1の間で数字が小さいほど高速周期です。
-# 	推奨値:FTDX10=0.02 , FT710=xxx , FT891=0.1 , FT991=0.1
-#
-# FNCxはCATコマンド発行機能です(おまけ機能)。
-#	第1パラメーターはLabel(6文字)、第2パラメーターはCATコマンドになっています。
-#	CAT仕様書が理解できる方のみ使ってください。設定ミスは設備の破損に繋がります！！
-#	ご自身でリグに合わせて４つまで設定可能です。
-#	Read系のCATコマンド発行できても応答は拾えません(使えません)。
-#	サンプル情報はFTDX10で行っています。
-#
-SERIAL_PORT=/dev/cu.usbserial-1410
-SERIAL_PORT_DL=/dev/cu.SLAB_USBtoUART1
-BAUD_RATE=38400
-SCAN_SP=0.1
-FNC1=_MAIN_,BD0;
-FNC2=_SUB__,BD1;
-FNC3=__FM__,MD04;
-FNC4=DT_USB,MD0C;
-```
-```makedown
-| パラメータ      | 説明                             	        |
-|---------------+-----------------------------------------------+
-| SERIAL_PORT	| 通信ポート。例：                              	|
-|              	| - Raspberry Pi: `/dev/ttyUSB0`               	|
-|              	| - macOS: `/dev/cu.usbserial-1410`         	|
-|              	| - Windows: `COM3`                         	|
-| SERIAL_PORT_DL| Dual UART用第二通信ポートまたは第二無線設備など     |
-| BAUD_RATE    	| 通信速度。リグ側に合わせて設定            		|
-|              	| 例：4800〜38400                           	|
-| SCAN_SP      	| 読み出し周期（0.01〜0.1）。値が小さいほど高速 	|
-| FNC1 - FNC4   | CATコマンド発行機能(機種に合わせて自由設定)         |
-|               | - 第1パラメーターはLabel(6文字)                   |
-|               | - 第2パラメーターはCommand                       |
-+---------------+-----------------------------------------------+
+Connect the transceiver directly to the local computer using a serial connection.
+
+In this mode, toy_meter starts and manages `rigctld` locally.
+
+The local `rigctld` operates as a Server, allowing other applications or computers to connect to it through the configured TCP port.
+
+The default port is:
+
+```text
+4532
 ```
 
-## 🍓 Raspberry Pi で利用
-起動手順
+For multiple USB-connected radios on the same computer, toy_meter can automatically use the following ports:
 
-0.Raspberry Piの準備
-```ini
-【ターゲット設備(指定以外は動作実績なし)】
-	Raspberry 3B+
-	3.5inch LCD 480x320タッチパネル・ディスプレイ(ADS7846ドライバー)
-	microSD 16GB以上
-
-【OSインストール】
-	Raspberry Pi OS Lite(64bit) 0.4GB版　(2025年4月時点)　←　Desktop版は使わない 
-	OSをmicroSDに焼く前に初期設定を行う。設定は全て任意です。
-	raspberry pi imager(macOS版) の場合は下記の通り
-	ホスト名：toymeter 
-	SSHを有効化する
-		パスワード認証を使う
-	ユーザー名とパスワードを設定する
-		ユーザー名：pi
-		パスワード：raspberry
-	Wi-Fiを設定する
-		SSID:　利用環境に合わせて設定
-		パスワード: 　利用環境に合わせて設定
-	ロケーションの設定
-		タイムゾーン：　Asia/Tokyo
-		キーボード：　jp
-	
-【環境更新】
-	sudo apt update
-	apt list --upgradable
-	sudo apt upgrade
-
-【Gitインストール】
-	sudo apt install git
-
-【3.5inch LCDの実装】
-	https://www.instructables.com/Raspberry-Pi-4B3B-35-Inch-LCD-Touch-DisplayScreen-/
-	sudo rm -rf LCD-show
-	git clone  https://github.com/goodtft/LCD-show.git  
-	chmod -R 755 LCD-show 
-	cd LCD-show/
-	sudo ./LCD35-show
-	# ディスプレイを回転させる
-	sudo nano /boot/config.txt
-		dtoverlay=tft35a:rotate=0
-		hdmi_cvt 320 480 60 6 0 0 0
-	# 環境設定
-	nano .bashrc
-		# カスタム
-		export QT_QPA_PLATFORM=linuxfb
-		export QT_QPA_EGLFS_FB=/dev/fb0
-		export QT_QPA_EVDEV_TOUCHSCREEN_PARAMETERS="/dev/input/event0"
-		export PATH=$HOME/.local/bin:$PATH
-
-```
-1.アプリケーションをダウンロードして展開
-```ini
-cd
-sudo systemctl stop toy_meter
-sudo rm -r toy_meter
-wget https://github.com/o26daisuki/toy_meter/releases/download/vx.x/toy_meter_vx.x_rpi.zip
-unzip toy_meter_vx.x_rpi.zip
-cd toy_meter
-./toy_meter
-```
-2.自動起動を設定したい場合は以下を参照：
-```ini
-sudo nano /etc/systemd/system/toy_meter.service
-
-[Unit]
-Description=Toy Meter for YAESU
-[Service]
-ExecStart=/home/pi/toy_meter/toy_meter -platform linuxfb
-Environment=QT_QPA_PLATFORM=linuxfb
-Restart=always
-User=pi
-Group=pi
-[Install]
-WantedBy=default.target
-
-sudo systemctl enable toy_meter
-
-```
-3.ソースコードで動かしたい場合は以下を参照：
-```ini
-sudo apt update
-sudo apt install -y python3 python3-pyqt6 python3-serial python3-pip libqt6gui6 libqt6core6 libqt6widgets6 qt6-qpa-plugins libegl1-mesa python3-evdev evtest
-
-cd
-git clone 現在調整中
-cd toy_meter
-nano toy_meter.conf
-python3 toy_meter.py
-
-sudo nano /etc/systemd/system/toy_meter.service
-[Unit]
-Description=Toy Meter for YAESU
-[Service]
-ExecStart=/usr/bin/python3 /home/pi/toy_meter/toy_meter.py -platform linuxfb
-Environment=QT_QPA_PLATFORM=linuxfb
-Restart=always
-User=pi
-Group=pi
-[Install]
-WantedBy=default.target
-
-sudo systemctl enable toy_meter
-
+```text
+4532
+4534
+4536
+4538
 ```
 
-## 🍎 macOS で利用
-起動手順
+Up to four USB Serial (Server) instances can be operated simultaneously on the same computer, provided that each radio uses a separate serial port.
 
-1.toy_meter_vx.x_mac.dmg をダウンロードしてインストール
+When multiple toy_meter instances are running, the currently used `rigctld` port can be checked in **Monitor** or **Debug** mode.
 
-2.USB接続ポートの確認（ターミナルで以下を実行）：
-```ini
-ls -l /dev/cu.*
+The port number is displayed in the meter panel title, for example:
 
-/dev/cu.usbserial-1410
-/dev/cu.SLAB_USBtoUART
-/dev/cu.usbserial-00F8CAF30
-→ 対象デバイスのポート名を確認してください。
-
+```text
+ToyMeter V2.0 [USB:4532]
 ```
 
-## 🪟 Windows 11 で利用
-起動手順
+To operate multiple toy_meter instances, make separate copies of the application directory and give each copy an appropriate name, for example:
 
-1.toy_meter_vx.x_win.zip をダウンロード・展開し、実行ファイルを起動
-
-2.デバイスマネージャーでポート番号（COMポート）を確認
-```ini
-Windowsツール → コンピュータの管理 → デバイスマネージャー → ポート（COMとLPT）
-→ 対象デバイスのポート名を確認してください。
+```text
+toy_meter_FTDX10
+toy_meter_FT818
 ```
 
-## 📩 お問い合わせ・バグ報告
-お受けしていません。
+### Network rigctld (Client)
 
-## 📝 ライセンス
-LICENSE ファイル参照
+Connect to a `rigctld` server running on another computer through the network.
 
-## 🎁謝意
-7K1AEU , JR2ANC , JR8URP , JE8CRA 評価試験ありがとうございます。
+Example:
+
+```text
+HOST: 192.168.1.100
+PORT: 4532
+```
+
+`4532` is the default TCP port commonly used by `rigctld`.
+
+In this mode, toy_meter does not use the local serial port.
+
+---
+
+## Setup
+
+The Setup screen provides three pages:
+
+- **Radio Parameters**
+- **About toy_meter**
+- **Configuration Diagram**
+
+### Connection Type
+
+| Connection Type | Description |
+|---|---|
+| USB Serial (Server) | Connects to a local radio through a serial port and starts a local `rigctld` server |
+| Network rigctld (Client) | Connects to a `rigctld` server running on another computer |
+
+### Radio Parameters
+
+The following parameters can be configured according to the connected radio and operating environment:
+
+- MFG
+- MODEL
+- RIG MODEL
+- SERIAL PORT
+- BAUD RATE
+- DATA BITS
+- PARITY
+- STOP BITS
+- FLOW CONTROL
+- RF POWER RANGE
+- SCAN_SP
+- RF REFERENCE
+- ALC REFERENCE
+- FNC1 - FNC4
+
+### Operating Mode
+
+| Mode | Description |
+|---|---|
+| Normal | Normal operating mode |
+| Monitor | Displays communication and meter information for checking the radio and calibration |
+| Debug | Detailed diagnostic information for troubleshooting |
+
+The **Monitor** mode can also be used to check the `rigctld` port currently assigned to a USB Serial (Server) connection.
+
+`Debug` mode is intended for troubleshooting and may result in slower response during normal operation.
+
+---
+
+## PO / RF Reference Calibration
+
+The PO meter may show different values depending on the transceiver and Hamlib implementation.
+
+If necessary, the PO meter can be calibrated using the RF Reference value.
+
+Basic procedure:
+
+1. Set `OPERATING MODE` to `Monitor`.
+2. Transmit at approximately 25% of the radio's maximum output power.
+3. FM mode is recommended for calibration.
+4. Click the green `PO` indication to perform calibration.
+5. If necessary, adjust the reference value manually.
+
+The displayed PO value should be regarded as an approximate indication rather than a precision measurement.
+
+---
+
+## ALC Reference Calibration
+
+ALC values can also differ significantly between transceiver models.
+
+If necessary, the ALC meter can be calibrated using the ALC Reference value.
+
+Basic procedure:
+
+1. Set `OPERATING MODE` to `Monitor`.
+2. Transmit while adjusting the radio to a level slightly below the upper limit of the radio's appropriate ALC range.
+3. Click the green `ALC` indication to perform calibration.
+4. If necessary, adjust the reference value manually.
+
+When using digital modes such as WSJT-X, calibration using the actual operating environment is recommended.
+
+> **Note:** PO and ALC indications depend on the transceiver model and Hamlib implementation. Use them as reference values rather than precision measurements.
+
+---
+
+## Serial Port Settings
+
+For USB Serial (Server) connections, configure the serial communication parameters according to the connected radio:
+
+- SERIAL PORT
+- BAUD RATE
+- DATA BITS
+- PARITY
+- STOP BITS
+- FLOW CONTROL
+
+### SCAN_SP
+
+`SCAN_SP` controls the interval used for meter updates.
+
+Typical values are:
+
+```text
+0.1 - 0.5
+```
+
+A smaller value generally provides faster meter response, but increases communication frequency.
+
+A larger value may be preferable for older computers, Raspberry Pi systems, older transceivers, or slower serial connections.
+
+If communication repeatedly fails, the Setup screen may be opened automatically so that the connection settings can be checked.
+
+---
+
+## Custom Functions
+
+The FNC function provides user-defined controls for YAESU CAT commands.
+
+Up to four functions can be configured:
+
+```text
+FNC1
+FNC2
+FNC3
+FNC4
+```
+
+Each function consists of a label and a CAT command.
+
+| Parameter | Description |
+|---|---|
+| Label | Display label |
+| Command | CAT command |
+
+### Notes
+
+- Commands requiring a response are not supported.
+- Commands that take a long time to complete may affect communication with the radio.
+- Users should understand the CAT command specifications of their transceiver before configuring custom functions.
+- Operation with transceivers other than YAESU is not guaranteed.
+
+---
+
+## Multiple Radios
+
+Multiple toy_meter instances can be operated on the same computer in USB Serial (Server) mode.
+
+The available `rigctld` ports are:
+
+```text
+4532
+4534
+4536
+4538
+```
+
+Each radio must use its own serial port.
+
+For example:
+
+```text
+Radio 1 → USB Serial → 4532
+Radio 2 → USB Serial → 4534
+Radio 3 → USB Serial → 4536
+Radio 4 → USB Serial → 4538
+```
+
+The actual port assigned to each instance can be checked in Monitor or Debug mode.
+
+When using multiple instances, make separate copies of the toy_meter application directory and give each copy an appropriate name.
+
+---
+
+## Network Operation
+
+Network operation allows toy_meter to connect to a `rigctld` server running on another computer.
+
+For example:
+
+```text
+Radio
+  │
+  │ Serial
+  ▼
+Computer A
+  │
+  │ rigctld
+  │ TCP 4532
+  ▼
+Network
+  │
+  ▼
+Computer B
+  │
+  │ toy_meter
+```
+
+The network connection is configured using the `RIGCTLD_HOST` and `RIGCTLD_PORT` parameters.
+
+---
+
+## Supported Environment
+
+toy_meter is intended for environments where Python, PyQt6, and Hamlib `rigctld` are available.
+
+The following environments have been tested:
+
+- macOS
+- Windows 11
+- Linux
+- Raspberry Pi OS
+
+Raspberry Pi systems with small displays can also be used.
+
+### Raspberry Pi
+
+toy_meter has been tested with Raspberry Pi systems using a small TFT display.
+
+The detailed TFT display installation and system-specific startup configuration are environment dependent and are not included in this README.
+
+Users should first configure their Raspberry Pi display and operating system so that the required PyQt6 display environment is available.
+
+---
+
+## Recommended SCAN_SP
+
+The following values are reference values only.
+
+| Environment | Recommended SCAN_SP |
+|---|---:|
+| Apple Silicon | 0.1 - 0.2 |
+| Windows 11 | 0.1 - 0.2 |
+| Raspberry Pi 3B+ | 0.3 - 0.5 |
+| 9600 bps | 0.3 - 0.5 |
+| 38400 bps | 0.1 - 0.3 |
+
+The appropriate value depends on the computer, Raspberry Pi, transceiver, serial communication speed, and operating environment.
+
+---
+
+## Troubleshooting
+
+### Communication fails after startup
+
+Check the following:
+
+1. Confirm the selected connection type.
+2. Check the radio model and RIG MODEL.
+3. Check the serial port.
+4. Check the serial communication parameters.
+5. For Network rigctld connections, check the host address and TCP port.
+6. For USB Serial connections, check whether the serial port is already being used by another application.
+7. Use **Monitor** or **Debug** mode to check communication information.
+
+If communication repeatedly fails, toy_meter may open the Setup screen automatically.
+
+---
+
+## Important Notes
+
+toy_meter is an **auxiliary meter application, not a precision measuring instrument**.
+
+In particular, PO and ALC values may differ between transceiver models because of differences in the values provided by the transceiver and the Hamlib implementation.
+
+Displayed values should therefore be regarded as reference values.
+
+The author is not responsible for any damage to a transceiver, computer, or other equipment, or for data loss resulting from the use of this software.
+
+**Use this software at your own responsibility.**
+
+---
+
+## License
+
+toy_meter is licensed under the **Mozilla Public License 2.0 (MPL-2.0)**.
+
+Copyright (c) 2026 JP1RXQ
+
+See the [`LICENSE`](LICENSE) file for the full license text.
+
+---
+
+## Credits
+
+**Developer**
+
+JP1RXQ
+
+**Evaluation / Testing**
+
+JR2ANC
+7K1AEU
+
+**Development Support**
+
+ChatGPT Support
+
+---
+
+## Disclaimer
+
+toy_meter is provided as-is without warranty.
+
+The software is intended as an auxiliary display for amateur radio operation and is not a precision measuring instrument.
+
+Use the software at your own responsibility.
+
+---
+
+**toy_meter Version 2.0**
+
+Developed by **JP1RXQ**

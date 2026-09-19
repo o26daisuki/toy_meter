@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+
+<html lang="nl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body {
+    background: white;
+    color: black;
+}
+
+body {
+    font-family: "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #222;
+}
+
+h1 {
+    border-bottom: 2px solid #4a90e2;
+}
+
+h2 {
+    background: #eef5ff;
+    padding: 6px;
+}
+
+h3 {
+    color: #1f4e79;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+.note {
+    background: #fff7d6;
+    border-left: 5px solid #f0c000;
+    padding: 10px;
+}
+
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+</style>
+
+<title>toy_meter Version 2.0 Setup Utility</title>
+
+</head>
+
+<body>
+
+<h1>toy_meter Version 2.0</h1>
+
+<p><b>Setup Utility</b></p>
+
+<h2>Overzicht</h2>
+
+<p>
+toy_meter is een eenvoudige meterapplicatie die de bedrijfsstatus van een amateurradio toont.
+</p>
+
+<p>
+Het toont de SIG-, PO-, SWR- en ALC-meters via Hamlib.
+</p>
+
+<h2>Belangrijkste functies</h2>
+
+<table>
+
+<tr>
+<th>Functie</th>
+<th>Inhoud</th>
+</tr>
+
+<tr>
+<td>Meter</td>
+<td>SIG / PO / SWR / ALC</td>
+</tr>
+
+<tr>
+<td>VFO-weergave</td>
+<td>Weergave van de actieve VFO-frequentie (onder 1000 MHz ondersteund)</td>
+</tr>
+
+<tr>
+<td>TIME-weergave</td>
+<td>UTC / Lokale tijd</td>
+</tr>
+
+<tr>
+<td>FNC</td>
+<td>Verzenden van nieuwe YAESU CAT-commando’s</td>
+</tr>
+
+<tr>
+<td>Correctie</td>
+<td>PO- / ALC-metercorrectie</td>
+</tr>
+
+<tr>
+<td>Serverfunctie</td>
+<td>Ondersteunt serververbinding via Hamlib rigctld</td>
+</tr>
+
+</table>
+
+<h2>Kenmerken</h2>
+
+<ul>
+
+<li>Werkt met Hamlib rigctld</li>
+
+<li>Ondersteunt twee verbindingsmethoden: USB Serial(Server) / Network rigctld(Client)</li>
+
+<li>Ondersteunt PO- / ALC-metercorrectie</li>
+
+<li>Compatibel met macOS / Windows 11 / Raspberry Pi OS / Linux</li>
+
+</ul>
+
+<div class="note">
+
+<b>Let op</b>
+
+<ul>
+
+<li>
+Deze software is geen meetinstrument, maar een hulpmeter.
+</li>
+
+<li>
+Wanneer andere applicaties of pc’s verbinding maken met Hamlib rigctld,
+gebruik dan <b>Network rigctld</b> bij Connection Type.
+</li>
+
+</ul>
+
+</div>
+
+<h2>USB(Server)-modus</h2>
+
+<p>
+In USB Serial(Server)-modus start toy_meter Hamlib rigctld op de lokale pc en communiceert met de radio.
+</p>
+
+<h3>Meerdere toy_meter-instanties op dezelfde pc gebruiken</h3>
+
+<p>
+Op dezelfde pc kunnen maximaal <b>4</b> toy_meter-instanties in USB(Server)-modus gelijktijdig worden uitgevoerd.
+</p>
+
+<p>
+Beschikbare poortnummers zijn:
+</p>
+
+<table>
+
+<tr>
+<th>toy_meter</th>
+<th>PORT</th>
+</tr>
+
+<tr>
+<td>1e instantie</td>
+<td>4532</td>
+</tr>
+
+<tr>
+<td>2e instantie</td>
+<td>4534</td>
+</tr>
+
+<tr>
+<td>3e instantie</td>
+<td>4536</td>
+</tr>
+
+<tr>
+<td>4e instantie</td>
+<td>4538</td>
+</tr>
+
+</table>
+
+<p>
+Wanneer meerdere radio’s gelijktijdig op dezelfde pc worden bewaakt,
+gebruik dan verschillende poortnummers voor elke radio.
+</p>
+
+<h3>Meerdere toy_meter-instanties starten</h3>
+
+<p>
+Om meerdere toy_meter-instanties te gebruiken, kopieert u het programma
+en geeft u elke kopie een andere bestandsnaam.
+</p>
+
+<p>Bijvoorbeeld, u kunt ze benoemen naar het radiomodel:</p>
+
+<pre>
+toy_meter_FTDX10
+toy_meter_FT818
+toy_meter_FT857
+toy_meter_FTDX101
+</pre>
+
+<p>
+Configureer in elke toy_meter afzonderlijk de radio, seriële poort,
+communicatiesnelheid en rigctld-poortnummer.
+</p>
+
+<div class="note">
+
+<b>Let op</b>
+
+<p>
+Dezelfde seriële poort kan niet door meerdere toy_meter-instanties worden gebruikt.
+Verbind elke toy_meter met een andere radio en seriële poort.
+</p>
+
+</div>
+
+<h3>Gebruikte poort controleren</h3>
+
+<p>
+Wanneer meerdere toy_meter-instanties worden gestart,
+kunt u het nummer van de momenteel gebruikte poort controleren in de <b>titel van het meterpaneel [USB:453x]</b>.
+</p>
+
+<p>
+Bovenaan het paneel wordt bijvoorbeeld weergegeven:
+</p>
+
+<pre>
+ToyMeter V2.0 [USB:4532]
+</pre>
+
+<p>
+Hiermee kunt u zien welke USB(Server)-poort door elke toy_meter wordt gebruikt.
+</p>
+
+<h2>SETUP (Instellingen)</h2>
+
+<h3>Connection Type (Verbindingsmethode)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Beschrijving</th>
+</tr>
+
+<tr>
+<td>USB Serial (Server)</td>
+<td>
+Voor het bedienen van een via USB aangesloten radio met rigctld op de lokale pc.
+toy_meter start rigctld.
+</td>
+</tr>
+
+<tr>
+<td>Network rigctld (Client)</td>
+<td>
+Voor verbinding via netwerk met een andere pc waarop Hamlib rigctld draait.
+</td>
+</tr>
+
+</table>
+
+<h3>Radio Setting (Radio-instellingen)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Beschrijving.1</th>
+<th>Beschrijving.2</th>
+</tr>
+
+<tr>
+<td>MFG / MODEL / RF POWER RANGE</td>
+<td>Instellen volgens de radio</td>
+<td></td>
+</tr>
+
+<tr>
+<td rowspan="3">OPERATING MODE</td>
+<td>Normal</td>
+<td>Normale werking</td>
+</tr>
+
+<tr>
+<td>Monitor</td>
+<td>
+Beschikbare meterfuncties worden in groen weergegeven.
+Wordt ook gebruikt voor PO- / ALC-metercorrectie.
+In USB(Server)-modus kunt u de gebruikte poort controleren.
+</td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td>
+Alleen voor debugging (kan de respons vertragen)
+</td>
+</tr>
+
+</table>
+
+<h3>RF REFERENCE (PO-metercorrectie)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Procedure</th>
+</tr>
+
+<tr>
+<td rowspan="4">RF REFERENCE</td>
+<td>STEP-1. Stel OPERATING MODE in op Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Zend op 25% van het maximale vermogen (FM-modus aanbevolen)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Klik op de groene “PO” om te corrigeren
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Pas indien nodig de correctiewaarde handmatig aan
+(stappen 1–3 zijn niet verplicht)
+</td>
+</tr>
+
+</table>
+
+<h3>ALC REFERENCE (ALC-metercorrectie)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Procedure</th>
+</tr>
+
+<tr>
+<td rowspan="4">ALC REFERENCE</td>
+<td>STEP-1. Stel OPERATING MODE in op Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Zend zodat de ALC-waarde van de radio iets onder de bovengrens blijft
+(WSJT-X aanbevolen)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Klik op de groene “ALC” om te corrigeren
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Pas indien nodig de correctiewaarde handmatig aan
+(stappen 1–3 zijn niet verplicht)
+</td>
+</tr>
+
+</table>
+
+<p>
+Hieronder staat een voorbeeld van de ALC-meter van de radio.
+Stel af zodat de naald iets boven het ▲-teken staat.
+</p>
+
+<p>
+<img src="ALC.png" alt="ALC Meter" width="200">
+</p>
+
+<p>
+<b>Let op:</b>
+PO- / ALC-meters verschillen sterk per radiomodel.
+Gebruik ze alleen als richtlijn.
+</p>
+
+<h3>Serial Port Setting (Seriële poortinstellingen)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Beschrijving.1</th>
+<th>Beschrijving.2</th>
+</tr>
+
+<tr>
+<td>
+SERIAL PORT / BAUD RATE / DATA BITS / PARITY / STOP BITS / FLOW CONTROL
+</td>
+<td>Instellen volgens de radio</td>
+<td></td>
+</tr>
+
+<tr>
+<td>SCAN_SP</td>
+<td>0.1 〜 0.5</td>
+<td>
+Hoe lager de waarde, hoe sneller de naald reageert.
+Voor oudere pc’s of radio’s wordt een hogere waarde aanbevolen.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Let op:</b>
+Bij communicatieproblemen wordt het Setup-scherm automatisch geopend.
+</p>
+
+<h3>Network rigctld (Netwerkverbinding)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Beschrijving.1</th>
+<th>Beschrijving.2</th>
+</tr>
+
+<tr>
+<td>HOST</td>
+<td>IP ADDRESS</td>
+<td>
+IP-adres van de pc(Server) waarop Hamlib rigctld draait.
+Bij lokaal gebruik: leeg laten of 127.0.0.1.
+</td>
+</tr>
+
+<tr>
+<td>PORT</td>
+<td>PORT NO</td>
+<td>
+Poortnummer van de pc(Server) waarop Hamlib rigctld draait.
+Standaard is 4532.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Referentie:</b>
+Bij gebruik van Server moet toy_meter aan de serverzijde
+Connection Type op USB Serial(Server) hebben ingesteld.
+In de clientapplicatie geeft u het IP-adres en poortnummer op van de pc waarop toy_meter draait.
+</p>
+
+<p>
+Voorbeeld:
+</p>
+
+<pre>
+192.168.1.100:4532
+</pre>
+
+<h3>Custom Functions (Aangepaste functies)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Beschrijving.1</th>
+<th>Beschrijving.2</th>
+</tr>
+
+<tr>
+<td rowspan="2">FNCx</td>
+<td>Eerste parameter</td>
+<td>Weergavelabel (max. 7 tekens)</td>
+</tr>
+
+<tr>
+<td>Tweede parameter</td>
+<td>Besturingscommando (max. 16 tekens)</td>
+</tr>
+
+</table>
+
+<p>
+<b>Let op:</b>
+Deze functie is geïmplementeerd voor nieuwe YAESU CAT-commando’s.
+Werking met andere radio’s is niet gegarandeerd.
+</p>
+
+<ul>
+
+<li>
+Niet compatibel met commando’s die een antwoord vereisen.
+</li>
+
+<li>
+Als een commando lang duurt,
+kan het Setup-scherm worden geopend.
+Gebruik van dergelijke commando’s wordt afgeraden.
+</li>
+
+<li>
+Gebruik alleen als u de communicatiespecificaties (CAT-commando’s) van de radio begrijpt.
+</li>
+
+</ul>
+
+<h3>Setup & Exit (Instellingen en afsluiten)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Beschrijving</th>
+</tr>
+
+<tr>
+<td>Rechts onder JP1RXQ</td>
+<td>Setup-scherm</td>
+</tr>
+
+<tr>
+<td>Links boven S</td>
+<td>
+Afsluiten (alleen voor Raspberry Pi 320×480-display)
+</td>
+</tr>
+
+<tr>
+<td>Rechts boven W</td>
+<td>
+TUNE (alleen voor nieuwe YAESU CAT-commando’s)
+</td>
+</tr>
+
+</table>
+
+<h2>Ondersteunde omgeving</h2>
+
+<p>
+Hamlib / rigctld is vereist voor de communicatie met de zendontvanger.
+</p>
+
+<h2>Aanbevolen instellingen</h2>
+
+<table>
+
+<tr>
+<th>Omgeving</th>
+<th>Aanbevolen SCAN_SP-waarde</th>
+</tr>
+
+<tr>
+<td>Apple Silicon</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Windows 11</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Raspberry Pi 3B+</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Verbindingssnelheid 9600bps</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Verbindingssnelheid 38400bps</td>
+<td>0.1 〜 0.3</td>
+</tr>
+
+</table>
+
+<h2>Disclaimer</h2>
+
+<ul>
+
+<li>
+De auteur is niet verantwoordelijk voor schade of gegevensverlies veroorzaakt door het gebruik van deze software.
+</li>
+
+<li>
+License: MPL 2.0, maar commercieel gebruik is verboden
+</li>
+
+<li>
+Gebruik op eigen verantwoordelijkheid.
+</li>
+
+</ul>
+
+<hr>
+
+<p style="text-align:right">
+
+<b>Ontwikkeling: JP1RXQ</b>
+
+Evaluatie: JR2ANC / 7K1AEU
+
+</p>
+
+</body>
+
+</html>

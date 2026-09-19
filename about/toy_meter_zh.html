@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body {
+    background: white;
+    color: black;
+}
+
+body {
+    font-family: "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #222;
+}
+
+h1 {
+    border-bottom: 2px solid #4a90e2;
+}
+
+h2 {
+    background: #eef5ff;
+    padding: 6px;
+}
+
+h3 {
+    color: #1f4e79;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+.note {
+    background: #fff7d6;
+    border-left: 5px solid #f0c000;
+    padding: 10px;
+}
+
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+</style>
+
+<title>toy_meter Version 2.0 Setup Utility</title>
+
+</head>
+
+<body>
+
+<h1>toy_meter Version 2.0</h1>
+
+<p><b>Setup Utility</b></p>
+
+<h2>概要</h2>
+
+<p>
+toy_meter 是一款用于显示业余无线电设备运行状态的简易仪表应用程序。
+</p>
+
+<p>
+通过 Hamlib 显示 SIG、PO、SWR、ALC 仪表。
+</p>
+
+<h2>主要功能</h2>
+
+<table>
+
+<tr>
+<th>功能</th>
+<th>内容</th>
+</tr>
+
+<tr>
+<td>仪表</td>
+<td>SIG / PO / SWR / ALC</td>
+</tr>
+
+<tr>
+<td>VFO 显示</td>
+<td>显示当前运行的 VFO 频率（支持 1000MHz 以下）</td>
+</tr>
+
+<tr>
+<td>TIME 显示</td>
+<td>UTC / 本地时间</td>
+</tr>
+
+<tr>
+<td>FNC</td>
+<td>发送 YAESU 新 CAT 指令</td>
+</tr>
+
+<tr>
+<td>校正</td>
+<td>PO / ALC 仪表校正</td>
+</tr>
+
+<tr>
+<td>服务器功能</td>
+<td>支持使用 Hamlib rigctld 的服务器连接</td>
+</tr>
+
+</table>
+
+<h2>特点</h2>
+
+<ul>
+
+<li>使用 Hamlib rigctld 运行</li>
+
+<li>支持 USB Serial(Server) / Network rigctld(Client) 两种连接方式</li>
+
+<li>支持 PO / ALC 仪表校正</li>
+
+<li>支持 macOS / Windows 11 / Raspberry Pi OS / Linux</li>
+
+</ul>
+
+<div class="note">
+
+<b>注意</b>
+
+<ul>
+
+<li>
+本软件不是测量仪器，而是辅助仪表。
+</li>
+
+<li>
+若其他应用程序或电脑需要连接 Hamlib rigctld，
+请在 Connection Type 中选择 <b>Network rigctld</b>。
+</li>
+
+</ul>
+
+</div>
+
+<h2>USB(Server) 模式</h2>
+
+<p>
+在 USB Serial(Server) 模式下，toy_meter 会在本地电脑上启动 Hamlib rigctld，并与无线电设备通信。
+</p>
+
+<h3>在同一电脑上使用多个 toy_meter</h3>
+
+<p>
+同一电脑上最多可同时运行 <b>4 个</b> USB(Server) 模式的 toy_meter。
+</p>
+
+<p>
+可使用的端口号如下：
+</p>
+
+<table>
+
+<tr>
+<th>toy_meter</th>
+<th>PORT</th>
+</tr>
+
+<tr>
+<td>第 1 个</td>
+<td>4532</td>
+</tr>
+
+<tr>
+<td>第 2 个</td>
+<td>4534</td>
+</tr>
+
+<tr>
+<td>第 3 个</td>
+<td>4536</td>
+</tr>
+
+<tr>
+<td>第 4 个</td>
+<td>4538</td>
+</tr>
+
+</table>
+
+<p>
+若需同时监控多个无线电设备，请为每个设备使用不同的端口号。
+</p>
+
+<h3>如何启动多个 toy_meter</h3>
+
+<p>
+若需使用多个 toy_meter，可复制程序，
+并为每个副本设置不同的文件名。
+</p>
+
+<p>例如，可按无线电设备型号命名：</p>
+
+<pre>
+toy_meter_FTDX10
+toy_meter_FT818
+toy_meter_FT857
+toy_meter_FTDX101
+</pre>
+
+<p>
+在每个 toy_meter 中分别设置无线电设备、串口、
+通信速度以及 rigctld 端口号。
+</p>
+
+<div class="note">
+
+<b>注意</b>
+
+<p>
+同一个串口不能同时被多个 toy_meter 使用。
+每个 toy_meter 必须连接到不同的无线电设备和串口。
+</p>
+
+</div>
+
+<h3>确认正在使用的端口号</h3>
+
+<p>
+当启动多个 toy_meter 时，
+您可以在<b>仪表面板标题的 [USB:453x]</b>中查看当前使用的端口号。
+</p>
+
+<p>
+面板顶部会显示如下内容：
+</p>
+
+<pre>
+ToyMeter V2.0 [USB:4532]
+</pre>
+
+<p>
+由此可确认当前 toy_meter 使用的 USB(Server) 端口。
+</p>
+
+<h2>SETUP（设置）</h2>
+
+<h3>Connection Type（连接方式）</h3>
+
+<table>
+
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+
+<tr>
+<td>USB Serial (Server)</td>
+<td>
+用于通过本地 PC 上的 rigctld 控制 USB 连接的无线电设备。
+toy_meter 会启动 rigctld。
+</td>
+</tr>
+
+<tr>
+<td>Network rigctld (Client)</td>
+<td>
+用于通过网络连接到其他运行 Hamlib rigctld 的电脑。
+</td>
+</tr>
+
+</table>
+
+<h3>Radio Setting（无线电设备设置）</h3>
+
+<table>
+
+<tr>
+<th>项目</th>
+<th>说明.1</th>
+<th>说明.2</th>
+</tr>
+
+<tr>
+<td>MFG / MODEL / RF POWER RANGE</td>
+<td>根据无线电设备设置</td>
+<td></td>
+</tr>
+
+<tr>
+<td rowspan="3">OPERATING MODE</td>
+<td>Normal</td>
+<td>正常运行</td>
+</tr>
+
+<tr>
+<td>Monitor</td>
+<td>
+以绿色显示可用的仪表功能。
+用于 PO / ALC 仪表校正。
+在 USB(Server) 模式下可确认端口号。
+</td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td>
+调试专用（可能导致响应变慢）
+</td>
+</tr>
+
+</table>
+
+<h3>RF REFERENCE（PO 仪表校正）</h3>
+
+<table>
+
+<tr>
+<th>项目</th>
+<th>步骤</th>
+</tr>
+
+<tr>
+<td rowspan="4">RF REFERENCE</td>
+<td>STEP-1. 将 OPERATING MODE 设置为 Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. 以最大输出的 25% 进行发射（推荐 FM 模式）
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. 点击绿色 “PO” 进行校正
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. 如有需要，可直接调整校正值
+（无需执行步骤 1〜3）
+</td>
+</tr>
+
+</table>
+
+<h3>ALC REFERENCE（ALC 仪表校正）</h3>
+
+<table>
+
+<tr>
+<th>项目</th>
+<th>步骤</th>
+</tr>
+
+<tr>
+<td rowspan="4">ALC REFERENCE</td>
+<td>STEP-1. 将 OPERATING MODE 设置为 Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. 发射使无线电设备的 ALC 值略低于适当范围的上限
+（推荐使用 WSJT-X）
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. 点击绿色 “ALC” 进行校正
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. 如有需要，可直接调整校正值
+（无需执行步骤 1〜3）
+</td>
+</tr>
+
+</table>
+
+<p>
+下图为无线电设备的 ALC 仪表示例。
+请调整使指针略高于 ▲ 标记。
+</p>
+
+<p>
+<img src="ALC.png" alt="ALC Meter" width="200">
+</p>
+
+<p>
+<b>注意：</b>
+PO / ALC 仪表因无线电设备型号差异较大，
+请仅作为参考使用。
+</p>
+
+<h3>Serial Port Setting（串口设置）</h3>
+
+<table>
+
+<tr>
+<th>项目</th>
+<th>说明.1</th>
+<th>说明.2</th>
+</tr>
+
+<tr>
+<td>
+SERIAL PORT / BAUD RATE / DATA BITS / PARITY / STOP BITS / FLOW CONTROL
+</td>
+<td>根据无线电设备设置</td>
+<td></td>
+</tr>
+
+<tr>
+<td>SCAN_SP</td>
+<td>0.1 〜 0.5</td>
+<td>
+数值越小，指针响应越快。
+旧电脑或旧无线电设备建议使用较大数值。
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>注意：</b>
+通信异常时，设置界面会自动打开。
+</p>
+
+<h3>Network rigctld（网络连接）</h3>
+
+<table>
+
+<tr>
+<th>项目</th>
+<th>说明.1</th>
+<th>说明.2</th>
+</tr>
+
+<tr>
+<td>HOST</td>
+<td>IP ADDRESS</td>
+<td>
+运行 Hamlib rigctld 的 PC(Server) 的 IP 地址。
+本地时可留空或使用 127.0.0.1。
+</td>
+</tr>
+
+<tr>
+<td>PORT</td>
+<td>PORT NO</td>
+<td>
+运行 Hamlib rigctld 的 PC(Server) 的端口号。
+默认值为 4532。
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>参考：</b>
+使用 Server 时，Server 端的 toy_meter 应设置为 USB Serial(Server)。
+在连接的应用程序中指定运行 toy_meter 的 PC 的 IP 地址和端口号。
+</p>
+
+<p>
+例如：
+</p>
+
+<pre>
+192.168.1.100:4532
+</pre>
+
+<h3>Custom Functions（自定义功能）</h3>
+
+<table>
+
+<tr>
+<th>项目</th>
+<th>说明.1</th>
+<th>说明.2</th>
+</tr>
+
+<tr>
+<td rowspan="2">FNCx</td>
+<td>第 1 参数</td>
+<td>显示标签（最多 7 个字符）</td>
+</tr>
+
+<tr>
+<td>第 2 参数</td>
+<td>控制指令（最多 16 个字符）</td>
+</tr>
+
+</table>
+
+<p>
+<b>注意：</b>
+此功能为 YAESU 新 CAT 指令设计。
+不保证在其他无线电设备上可用。
+</p>
+
+<ul>
+
+<li>
+不支持需要响应的指令。
+</li>
+
+<li>
+若指令执行时间过长，设置界面可能会打开。
+不建议使用此类指令。
+</li>
+
+<li>
+请仅在了解无线电设备通信规格（CAT 指令）的情况下使用。
+</li>
+
+</ul>
+
+<h3>Setup & Exit（设置与退出）</h3>
+
+<table>
+
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+
+<tr>
+<td>右下 JP1RXQ</td>
+<td>设置（Setup）界面</td>
+</tr>
+
+<tr>
+<td>左上 S</td>
+<td>
+退出（仅适用于 Raspberry Pi 320×480 显示器）
+</td>
+</tr>
+
+<tr>
+<td>右上 W</td>
+<td>
+TUNE（仅适用于 YAESU 新 CAT 指令）
+</td>
+</tr>
+
+</table>
+
+<h2>支持环境</h2>
+
+<p>
+与电台通信需要 Hamlib / rigctld。
+</p>
+
+<h2>推荐设置</h2>
+
+<table>
+
+<tr>
+<th>环境</th>
+<th>推荐 SCAN_SP 值</th>
+</tr>
+
+<tr>
+<td>Apple Silicon</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Windows 11</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Raspberry Pi 3B+</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>连接速度 9600bps</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>连接速度 38400bps</td>
+<td>0.1 〜 0.3</td>
+</tr>
+
+</table>
+
+<h2>免责声明</h2>
+
+<ul>
+
+<li>
+作者不对使用本软件造成的损坏或数据丢失承担责任。
+</li>
+
+<li>
+License: MPL 2.0，但禁止商业使用
+</li>
+
+<li>
+请自行承担使用风险。
+</li>
+
+</ul>
+
+<hr>
+
+<p style="text-align:right">
+
+<b>开发：JP1RXQ</b>
+
+评价：JR2ANC / 7K1AEU
+
+</p>
+
+</body>
+
+</html>

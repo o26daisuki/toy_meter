@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body {
+    background: white;
+    color: black;
+}
+
+body {
+    font-family: "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #222;
+}
+
+h1 {
+    border-bottom: 2px solid #4a90e2;
+}
+
+h2 {
+    background: #eef5ff;
+    padding: 6px;
+}
+
+h3 {
+    color: #1f4e79;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+.note {
+    background: #fff7d6;
+    border-left: 5px solid #f0c000;
+    padding: 10px;
+}
+
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+</style>
+
+<title>toy_meter Version 2.0 Setup Utility</title>
+
+</head>
+
+<body>
+
+<h1>toy_meter Version 2.0</h1>
+
+<p><b>Setup Utility</b></p>
+
+<h2>Overview</h2>
+
+<p>
+toy_meter is a simple meter application for displaying the operating status of amateur radio transceivers.
+</p>
+
+<p>
+SIG, PO, SWR, and ALC meters are displayed via Hamlib.
+</p>
+
+<h2>Main Features</h2>
+
+<table>
+
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>Meters</td>
+<td>SIG / PO / SWR / ALC</td>
+</tr>
+
+<tr>
+<td>VFO Display</td>
+<td>Displays the operating VFO frequency (supports frequencies below 1000 MHz)</td>
+</tr>
+
+<tr>
+<td>TIME Display</td>
+<td>UTC / Local Time</td>
+</tr>
+
+<tr>
+<td>FNC</td>
+<td>Sending new YAESU CAT commands</td>
+</tr>
+
+<tr>
+<td>Calibration</td>
+<td>PO / ALC meter calibration</td>
+</tr>
+
+<tr>
+<td>Server Function</td>
+<td>Supports Server connections using Hamlib rigctld</td>
+</tr>
+
+</table>
+
+<h2>Features</h2>
+
+<ul>
+
+<li>Operates using Hamlib rigctld</li>
+
+<li>Supports two connection methods: USB Serial(Server) / Network rigctld(Client)</li>
+
+<li>Supports PO / ALC meter calibration</li>
+
+<li>Supports macOS / Windows 11 / Raspberry Pi OS / Linux</li>
+
+</ul>
+
+<div class="note">
+
+<b>Note</b>
+
+<ul>
+
+<li>
+This software is an auxiliary meter, not a measuring instrument.
+</li>
+
+<li>
+When connecting to Hamlib rigctld from another application or PC,
+under Connection Type <b>Network rigctld</b> please use
+</li>
+
+</ul>
+
+</div>
+
+<h2>USB(Server) Mode</h2>
+
+<p>
+In USB Serial(Server) mode, toy_meter
+starts Hamlib rigctld on the local PC and communicates with the transceiver.
+</p>
+
+<h3>Using Multiple toy_meter Instances on the Same PC</h3>
+
+<p>
+On the same PC, you can run
+<b>up to <b>four</b></b> toy_meter instances simultaneously in USB(Server) mode.
+</p>
+
+<p>
+The following four port numbers are available.
+</p>
+
+<table>
+
+<tr>
+<th>toy_meter</th>
+<th>PORT</th>
+</tr>
+
+<tr>
+<td>1st</td>
+<td>4532</td>
+</tr>
+
+<tr>
+<td>2nd</td>
+<td>4534</td>
+</tr>
+
+<tr>
+<td>3rd</td>
+<td>4536</td>
+</tr>
+
+<tr>
+<td>4th</td>
+<td>4538</td>
+</tr>
+
+</table>
+
+<p>
+When monitoring multiple transceivers simultaneously on the same PC,
+use a different port number for each one.
+</p>
+
+<h3>How to Run Multiple toy_meter Instances</h3>
+
+<p>
+To use multiple toy_meter instances, copy the toy_meter program
+and use a different file name for each copy.
+</p>
+
+<p>For example, you can use the transceiver names as follows.</p>
+
+<pre>
+toy_meter_FTDX10
+toy_meter_FT818
+toy_meter_FT857
+toy_meter_FTDX101
+</pre>
+
+<p>
+For each toy_meter, configure the transceiver, serial port,
+communication speed, rigctld port number, and other settings individually.
+</p>
+
+<div class="note">
+
+<b>Note</b>
+
+<p>
+The same serial port cannot be used by multiple toy_meter instances.
+Connect each toy_meter to a different transceiver and serial port.
+</p>
+
+</div>
+
+<h3>Checking the Port Number in Use</h3>
+
+<p>
+When multiple toy_meter instances are started,
+you can check the port number currently in use in the <b>meter panel title [USB:453x]</b>.
+</p>
+
+<p>
+The title at the top of the panel will display, for example:
+</p>
+
+<pre>
+ToyMeter V2.0 [USB:4532]
+</pre>
+
+<p>
+This allows you to check which
+USB(Server) port the currently running toy_meter is using.
+</p>
+
+<h2>SETUP (Settings)</h2>
+
+<h3>Connection Type (Connection Method)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>USB Serial (Server)</td>
+<td>
+When controlling a USB-connected transceiver using rigctld on the local PC.
+toy_meter starts rigctld.
+</td>
+</tr>
+
+<tr>
+<td>Network rigctld (Client)</td>
+<td>
+When connecting to Hamlib rigctld running on another PC or similar device,
+connect via the network.
+</td>
+</tr>
+
+</table>
+
+<h3>Radio Setting (Transceiver Settings)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Description 1</th>
+<th>Description 2</th>
+</tr>
+
+<tr>
+<td>MFG / MODEL / RF POWER RANGE</td>
+<td>Configure according to the transceiver</td>
+<td></td>
+</tr>
+
+<tr>
+<td rowspan="3">OPERATING MODE</td>
+<td>Normal</td>
+<td>Normal operation</td>
+</tr>
+
+<tr>
+<td>Monitor</td>
+<td>
+Available meter functions are shown in green.
+Also used for PO / ALC meter calibration.
+In USB(Server) mode, you can also check the port number in use.
+</td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td>
+For debugging only (response performance will be reduced when used)
+</td>
+</tr>
+
+</table>
+
+<h3>RF REFERENCE (PO Meter Calibration)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Procedure</th>
+</tr>
+
+<tr>
+<td rowspan="4">RF REFERENCE</td>
+<td>STEP-1. Set OPERATING MODE to Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Transmit at 25% of the maximum output power (FM Mode recommended)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Click the green “PO” to calibrate
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Adjust the calibration value directly if necessary
+(This can be set without performing STEP-1 through STEP-3)
+</td>
+</tr>
+
+</table>
+
+<h3>ALC REFERENCE (ALC Meter Calibration)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Procedure</th>
+</tr>
+
+<tr>
+<td rowspan="4">ALC REFERENCE</td>
+<td>STEP-1. Set OPERATING MODE to Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Transmit so that the level is slightly below the upper limit of the appropriate ALC range on the transceiver
+(Using WSJT-X or similar software is recommended)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Click the green “ALC” to calibrate
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Adjust the calibration value directly if necessary
+(This can be set without performing STEP-1 through STEP-3)
+</td>
+</tr>
+
+</table>
+
+<p>
+Below is an example of the ALC meter on the transceiver.
+Adjust it so that the needle is slightly above the ▲ position.
+</p>
+
+<p>
+<img src="ALC.png" alt="ALC Meter" width="200">
+</p>
+
+<p>
+<b>Note:</b>
+PO / ALC meters vary significantly depending on the transceiver model,
+so please use them as a reference.
+</p>
+
+<h3>Serial Port Setting (Serial Connection Settings)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Description 1</th>
+<th>Description 2</th>
+</tr>
+
+<tr>
+<td>
+SERIAL PORT / BAUD RATE / DATA BITS / PARITY / STOP BITS / FLOW CONTROL
+</td>
+<td>Configure according to the transceiver</td>
+<td></td>
+</tr>
+
+<tr>
+<td>SCAN_SP</td>
+<td>0.1 〜 0.5</td>
+<td>
+The smaller the value, the better the needle response.
+A larger value is recommended for older PCs or older transceivers.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Note:</b>
+If a communication error occurs, the Setup screen will open automatically.
+</p>
+
+<h3>Network rigctld (Network Connection)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Description 1</th>
+<th>Description 2</th>
+</tr>
+
+<tr>
+<td>HOST</td>
+<td>IP ADDRESS</td>
+<td>
+IP address of the PC (Server) running Hamlib rigctld.
+For Local, leave blank or use 127.0.0.1.
+</td>
+</tr>
+
+<tr>
+<td>PORT</td>
+<td>PORT NO</td>
+<td>
+PORT number of the PC (Server) running Hamlib rigctld.
+The default is 4532.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Reference:</b>
+When using a Server, the toy_meter on the Server side
+should use Connection Type USB Serial(Server).
+In the connecting application, specify the
+IP address and PORT number of the PC where toy_meter is running.
+</p>
+
+<p>
+Example:
+</p>
+
+<pre>
+192.168.1.100:4532
+</pre>
+
+<h3>Custom Functions (Custom Functions)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Description 1</th>
+<th>Description 2</th>
+</tr>
+
+<tr>
+<td rowspan="2">FNCx</td>
+<td>1st Parameter</td>
+<td>Display label (maximum 7 characters)</td>
+</tr>
+
+<tr>
+<td>2nd Parameter</td>
+<td>Control command (maximum 16 characters)</td>
+</tr>
+
+</table>
+
+<p>
+<b>Note:</b>
+This function is implemented for new CAT commands from YAESU.
+Operation with other transceivers is not guaranteed.
+</p>
+
+<ul>
+
+<li>
+Commands that require a response are not supported.
+</li>
+
+<li>
+If the waiting time until command completion is too long,
+the Setup screen may open.
+Use of such commands is not recommended.
+</li>
+
+<li>
+Use this function only if you understand the communication specifications (CAT commands) of the transceiver.
+</li>
+
+</ul>
+
+<h3>Setup & Exit (Settings and Exit)</h3>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>Bottom right JP1RXQ</td>
+<td>Setup screen</td>
+</tr>
+
+<tr>
+<td>Top left S</td>
+<td>
+Exit (for Raspberry Pi 320×480 displays only)
+</td>
+</tr>
+
+<tr>
+<td>Top right W</td>
+<td>
+TUNE (for new YAESU CAT commands only)
+</td>
+</tr>
+
+</table>
+
+<h2>Supported Environment</h2>
+
+<p>
+Hamlib / rigctld is required for communication with the transceiver.
+</p>
+
+<h2>Recommended Settings</h2>
+
+<table>
+
+<tr>
+<th>Environment</th>
+<th>Recommended SCAN_SP</th>
+</tr>
+
+<tr>
+<td>Apple Silicon</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Windows 11</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Raspberry Pi 3B+</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Connection speed 9600 bps</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Connection speed 38400 bps</td>
+<td>0.1 〜 0.3</td>
+</tr>
+
+</table>
+
+<h2>Disclaimer</h2>
+
+<ul>
+
+<li>
+The author assumes no responsibility for failures, data loss, or other consequences resulting from the use of this software.
+</li>
+
+<li>
+License: MPL 2.0, commercial use prohibited
+</li>
+
+<li>
+Use this software at your own risk.
+</li>
+
+</ul>
+
+<hr>
+
+<p style="text-align:right">
+
+<b>Developed by: JP1RXQ</b>
+
+Evaluated by: JR2ANC / 7K1AEU
+
+</p>
+
+</body>
+
+</html>

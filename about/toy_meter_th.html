@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body {
+    background: white;
+    color: black;
+}
+
+body {
+    font-family: "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #222;
+}
+
+h1 {
+    border-bottom: 2px solid #4a90e2;
+}
+
+h2 {
+    background: #eef5ff;
+    padding: 6px;
+}
+
+h3 {
+    color: #1f4e79;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+.note {
+    background: #fff7d6;
+    border-left: 5px solid #f0c000;
+    padding: 10px;
+}
+
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+</style>
+
+<title>toy_meter Version 2.0 Setup Utility</title>
+
+</head>
+
+<body>
+
+<h1>toy_meter Version 2.0</h1>
+
+<p><b>Setup Utility</b></p>
+
+<h2>ภาพรวม</h2>
+
+<p>
+toy_meter เป็นแอปพลิเคชันมิเตอร์แบบง่ายที่ใช้แสดงสถานะการทำงานของวิทยุสมัครเล่น
+</p>
+
+<p>
+แสดงมิเตอร์ SIG, PO, SWR และ ALC ผ่าน Hamlib
+</p>
+
+<h2>ฟังก์ชันหลัก</h2>
+
+<table>
+
+<tr>
+<th>ฟังก์ชัน</th>
+<th>เนื้อหา</th>
+</tr>
+
+<tr>
+<td>มิเตอร์</td>
+<td>SIG / PO / SWR / ALC</td>
+</tr>
+
+<tr>
+<td>แสดง VFO</td>
+<td>แสดงความถี่ VFO ที่กำลังใช้งาน (รองรับต่ำกว่า 1000MHz)</td>
+</tr>
+
+<tr>
+<td>แสดงเวลา TIME</td>
+<td>UTC / เวลาท้องถิ่น</td>
+</tr>
+
+<tr>
+<td>FNC</td>
+<td>ส่งคำสั่ง CAT ใหม่ของ YAESU</td>
+</tr>
+
+<tr>
+<td>การปรับเทียบ</td>
+<td>ปรับเทียบมิเตอร์ PO / ALC</td>
+</tr>
+
+<tr>
+<td>ฟังก์ชันเซิร์ฟเวอร์</td>
+<td>รองรับการเชื่อมต่อเซิร์ฟเวอร์ผ่าน Hamlib rigctld</td>
+</tr>
+
+</table>
+
+<h2>คุณลักษณะ</h2>
+
+<ul>
+
+<li>ทำงานโดยใช้ Hamlib rigctld</li>
+
+<li>รองรับการเชื่อมต่อ 2 แบบ: USB Serial(Server) / Network rigctld(Client)</li>
+
+<li>รองรับการปรับเทียบมิเตอร์ PO / ALC</li>
+
+<li>รองรับ macOS / Windows 11 / Raspberry Pi OS / Linux</li>
+
+</ul>
+
+<div class="note">
+
+<b>ข้อควรระวัง</b>
+
+<ul>
+
+<li>
+ซอฟต์แวร์นี้ไม่ใช่อุปกรณ์วัด แต่เป็นมิเตอร์เสริม
+</li>
+
+<li>
+หากแอปพลิเคชันหรือคอมพิวเตอร์อื่นต้องการเชื่อมต่อกับ Hamlib rigctld
+ให้ใช้ <b>Network rigctld</b> ใน Connection Type
+</li>
+
+</ul>
+
+</div>
+
+<h2>โหมด USB(Server)</h2>
+
+<p>
+ในโหมด USB Serial(Server) toy_meter จะเริ่ม Hamlib rigctld บนคอมพิวเตอร์เครื่องนั้นและสื่อสารกับวิทยุ
+</p>
+
+<h3>การใช้ toy_meter หลายตัวบนคอมพิวเตอร์เดียวกัน</h3>
+
+<p>
+สามารถเปิด toy_meter ในโหมด USB(Server) ได้พร้อมกันสูงสุด <b>4 ตัว</b> บนคอมพิวเตอร์เครื่องเดียว
+</p>
+
+<p>
+หมายเลขพอร์ตที่สามารถใช้ได้มีดังนี้:
+</p>
+
+<table>
+
+<tr>
+<th>toy_meter</th>
+<th>PORT</th>
+</tr>
+
+<tr>
+<td>ตัวที่ 1</td>
+<td>4532</td>
+</tr>
+
+<tr>
+<td>ตัวที่ 2</td>
+<td>4534</td>
+</tr>
+
+<tr>
+<td>ตัวที่ 3</td>
+<td>4536</td>
+</tr>
+
+<tr>
+<td>ตัวที่ 4</td>
+<td>4538</td>
+</tr>
+
+</table>
+
+<p>
+หากต้องการมอนิเตอร์วิทยุหลายเครื่องพร้อมกันบนคอมพิวเตอร์เดียว
+ให้ใช้หมายเลขพอร์ตที่แตกต่างกันสำหรับแต่ละเครื่อง
+</p>
+
+<h3>วิธีเปิด toy_meter หลายตัว</h3>
+
+<p>
+หากต้องการใช้ toy_meter หลายตัว ให้คัดลอกโปรแกรม
+และตั้งชื่อไฟล์ใหม่ตามต้องการสำหรับแต่ละตัว
+</p>
+
+<p>ตัวอย่างเช่น ตั้งชื่อตามรุ่นวิทยุ:</p>
+
+<pre>
+toy_meter_FTDX10
+toy_meter_FT818
+toy_meter_FT857
+toy_meter_FTDX101
+</pre>
+
+<p>
+แต่ละ toy_meter ต้องตั้งค่ารุ่นวิทยุ พอร์ตซีเรียล
+ความเร็วสื่อสาร และหมายเลขพอร์ต rigctld แยกกัน
+</p>
+
+<div class="note">
+
+<b>ข้อควรระวัง</b>
+
+<p>
+ไม่สามารถใช้พอร์ตซีเรียลเดียวกันกับ toy_meter หลายตัวได้
+แต่ละตัวต้องเชื่อมต่อกับวิทยุและพอร์ตซีเรียลที่แตกต่างกัน
+</p>
+
+</div>
+
+<h3>ตรวจสอบหมายเลขพอร์ตที่ใช้งานอยู่</h3>
+
+<p>
+เมื่อเปิดใช้งาน toy_meter หลายตัว
+คุณสามารถตรวจสอบหมายเลขพอร์ตที่กำลังใช้งานอยู่ได้จาก <b>ชื่อหัวข้อของแผงมิเตอร์ [USB:453x]</b>
+</p>
+
+<p>
+ด้านบนของหน้าจอจะแสดงตัวอย่างเช่น:
+</p>
+
+<pre>
+ToyMeter V2.0 [USB:4532]
+</pre>
+
+<p>
+ทำให้ทราบว่า toy_meter ตัวนั้นกำลังใช้พอร์ต USB(Server) หมายเลขใด
+</p>
+
+<h2>SETUP (การตั้งค่า)</h2>
+
+<h3>Connection Type (ประเภทการเชื่อมต่อ)</h3>
+
+<table>
+
+<tr>
+<th>รายการ</th>
+<th>คำอธิบาย</th>
+</tr>
+
+<tr>
+<td>USB Serial (Server)</td>
+<td>
+ใช้ควบคุมวิทยุที่เชื่อมต่อผ่าน USB โดยใช้ rigctld บนคอมพิวเตอร์เครื่องนั้น
+toy_meter จะเริ่มการทำงานของ rigctld
+</td>
+</tr>
+
+<tr>
+<td>Network rigctld (Client)</td>
+<td>
+ใช้เชื่อมต่อผ่านเครือข่ายไปยังคอมพิวเตอร์เครื่องอื่นที่กำลังรัน Hamlib rigctld
+</td>
+</tr>
+
+</table>
+
+<h3>Radio Setting (การตั้งค่าวิทยุ)</h3>
+
+<table>
+
+<tr>
+<th>รายการ</th>
+<th>คำอธิบาย.1</th>
+<th>คำอธิบาย.2</th>
+</tr>
+
+<tr>
+<td>MFG / MODEL / RF POWER RANGE</td>
+<td>ตั้งค่าตามรุ่นวิทยุ</td>
+<td></td>
+</tr>
+
+<tr>
+<td rowspan="3">OPERATING MODE</td>
+<td>Normal</td>
+<td>โหมดใช้งานปกติ</td>
+</tr>
+
+<tr>
+<td>Monitor</td>
+<td>
+แสดงฟังก์ชันมิเตอร์ที่สามารถใช้ได้เป็นสีเขียว
+ใช้สำหรับปรับเทียบมิเตอร์ PO / ALC
+และตรวจสอบหมายเลขพอร์ตในโหมด USB(Server)
+</td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td>
+โหมดสำหรับดีบัก (อาจทำให้การตอบสนองช้าลง)
+</td>
+</tr>
+
+</table>
+
+<h3>RF REFERENCE (การปรับเทียบมิเตอร์ PO)</h3>
+
+<table>
+
+<tr>
+<th>รายการ</th>
+<th>ขั้นตอน</th>
+</tr>
+
+<tr>
+<td rowspan="4">RF REFERENCE</td>
+<td>STEP-1. ตั้ง OPERATING MODE เป็น Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. ส่งสัญญาณที่ 25% ของกำลังสูงสุด (แนะนำโหมด FM)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. คลิก “PO” สีเขียวเพื่อทำการปรับเทียบ
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. หากจำเป็นสามารถปรับค่าการเทียบเองได้
+(ไม่จำเป็นต้องทำขั้นตอน 1–3)
+</td>
+</tr>
+
+</table>
+
+<h3>ALC REFERENCE (การปรับเทียบมิเตอร์ ALC)</h3>
+
+<table>
+
+<tr>
+<th>รายการ</th>
+<th>ขั้นตอน</th>
+</tr>
+
+<tr>
+<td rowspan="4">ALC REFERENCE</td>
+<td>STEP-1. ตั้ง OPERATING MODE เป็น Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. ส่งสัญญาณให้ระดับ ALC อยู่ต่ำกว่าขีดบนเล็กน้อย
+(แนะนำให้ใช้ WSJT-X)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. คลิก “ALC” สีเขียวเพื่อทำการปรับเทียบ
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. หากจำเป็นสามารถปรับค่าการเทียบเองได้
+(ไม่จำเป็นต้องทำขั้นตอน 1–3)
+</td>
+</tr>
+
+</table>
+
+<p>
+ด้านล่างเป็นตัวอย่างมิเตอร์ ALC ของวิทยุ
+ปรับให้เข็มอยู่สูงกว่าสัญลักษณ์ ▲ เล็กน้อย
+</p>
+
+<p>
+<img src="ALC.png" alt="ALC Meter" width="200">
+</p>
+
+<p>
+<b>ข้อควรระวัง:</b>
+มิเตอร์ PO / ALC แตกต่างกันมากตามรุ่นวิทยุ
+ใช้เป็นข้อมูลอ้างอิงเท่านั้น
+</p>
+
+<h3>Serial Port Setting (การตั้งค่าพอร์ตซีเรียล)</h3>
+
+<table>
+
+<tr>
+<th>รายการ</th>
+<th>คำอธิบาย.1</th>
+<th>คำอธิบาย.2</th>
+</tr>
+
+<tr>
+<td>
+SERIAL PORT / BAUD RATE / DATA BITS / PARITY / STOP BITS / FLOW CONTROL
+</td>
+<td>ตั้งค่าตามวิทยุ</td>
+<td></td>
+</tr>
+
+<tr>
+<td>SCAN_SP</td>
+<td>0.1 〜 0.5</td>
+<td>
+ค่ายิ่งน้อย เข็มจะตอบสนองเร็วขึ้น
+สำหรับคอมพิวเตอร์หรือวิทยุรุ่นเก่า แนะนำให้ใช้ค่ามากขึ้น
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>ข้อควรระวัง:</b>
+หากเกิดข้อผิดพลาดในการสื่อสาร หน้าจอตั้งค่าจะเปิดขึ้นโดยอัตโนมัติ
+</p>
+
+<h3>Network rigctld (การเชื่อมต่อเครือข่าย)</h3>
+
+<table>
+
+<tr>
+<th>รายการ</th>
+<th>คำอธิบาย.1</th>
+<th>คำอธิบาย.2</th>
+</tr>
+
+<tr>
+<td>HOST</td>
+<td>IP ADDRESS</td>
+<td>
+ที่อยู่ IP ของคอมพิวเตอร์ (Server) ที่รัน Hamlib rigctld
+หากใช้งานภายในเครื่อง ให้เว้นว่างหรือใช้ 127.0.0.1
+</td>
+</tr>
+
+<tr>
+<td>PORT</td>
+<td>PORT NO</td>
+<td>
+หมายเลขพอร์ตของคอมพิวเตอร์ (Server) ที่รัน Hamlib rigctld
+ค่าเริ่มต้นคือ 4532
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>ข้อมูลเพิ่มเติม:</b>
+หากใช้โหมด Server ให้ตั้งค่า Connection Type ของ toy_meter ฝั่งเซิร์ฟเวอร์เป็น USB Serial(Server)
+ในแอปพลิเคชันที่เชื่อมต่อ ให้ระบุ IP และหมายเลขพอร์ตของคอมพิวเตอร์ที่รัน toy_meter
+</p>
+
+<p>
+ตัวอย่าง:
+</p>
+
+<pre>
+192.168.1.100:4532
+</pre>
+
+<h3>Custom Functions (ฟังก์ชันกำหนดเอง)</h3>
+
+<table>
+
+<tr>
+<th>รายการ</th>
+<th>คำอธิบาย.1</th>
+<th>คำอธิบาย.2</th>
+</tr>
+
+<tr>
+<td rowspan="2">FNCx</td>
+<td>พารามิเตอร์ที่ 1</td>
+<td>ป้ายแสดงผล (สูงสุด 7 ตัวอักษร)</td>
+</tr>
+
+<tr>
+<td>พารามิเตอร์ที่ 2</td>
+<td>คำสั่งควบคุม (สูงสุด 16 ตัวอักษร)</td>
+</tr>
+
+</table>
+
+<p>
+<b>ข้อควรระวัง:</b>
+ฟังก์ชันนี้พัฒนาสำหรับคำสั่ง CAT ใหม่ของ YAESU
+ไม่รับประกันการทำงานกับวิทยุรุ่นอื่น
+</p>
+
+<ul>
+
+<li>
+ไม่รองรับคำสั่งที่ต้องการการตอบกลับ
+</li>
+
+<li>
+หากคำสั่งใช้เวลานาน หน้าจอตั้งค่าอาจเปิดขึ้น
+ไม่แนะนำให้ใช้คำสั่งประเภทนี้
+</li>
+
+<li>
+ควรใช้เฉพาะผู้ที่เข้าใจสเปกการสื่อสาร (CAT commands) ของวิทยุ
+</li>
+
+</ul>
+
+<h3>Setup & Exit (การตั้งค่าและออกจากโปรแกรม)</h3>
+
+<table>
+
+<tr>
+<th>รายการ</th>
+<th>คำอธิบาย</th>
+</tr>
+
+<tr>
+<td>มุมขวาล่าง JP1RXQ</td>
+<td>หน้าจอตั้งค่า (Setup)</td>
+</tr>
+
+<tr>
+<td>มุมซ้ายบน S</td>
+<td>
+ออกจากโปรแกรม (เฉพาะหน้าจอ Raspberry Pi 320×480)
+</td>
+</tr>
+
+<tr>
+<td>มุมขวาบน W</td>
+<td>
+TUNE (เฉพาะคำสั่ง CAT ใหม่ของ YAESU)
+</td>
+</tr>
+
+</table>
+
+<h2>สภาพแวดล้อมที่รองรับ</h2>
+
+<p>
+จำเป็นต้องใช้ Hamlib / rigctld สำหรับการสื่อสารกับเครื่องรับส่งวิทยุ
+</p>
+
+<h2>การตั้งค่าแนะนำ</h2>
+
+<table>
+
+<tr>
+<th>สภาพแวดล้อม</th>
+<th>ค่า SCAN_SP ที่แนะนำ</th>
+</tr>
+
+<tr>
+<td>Apple Silicon</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Windows 11</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Raspberry Pi 3B+</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>ความเร็วการเชื่อมต่อ 9600bps</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>ความเร็วการเชื่อมต่อ 38400bps</td>
+<td>0.1 〜 0.3</td>
+</tr>
+
+</table>
+
+<h2>ข้อจำกัดความรับผิดชอบ</h2>
+
+<ul>
+
+<li>
+ผู้พัฒนาไม่รับผิดชอบต่อความเสียหายหรือการสูญหายของข้อมูลที่เกิดจากการใช้ซอฟต์แวร์นี้
+</li>
+
+<li>
+License: MPL 2.0 แต่ห้ามใช้เชิงพาณิชย์
+</li>
+
+<li>
+โปรดใช้งานด้วยความรับผิดชอบของคุณเอง
+</li>
+
+</ul>
+
+<hr>
+
+<p style="text-align:right">
+
+<b>พัฒนาโดย: JP1RXQ</b>
+
+ประเมินโดย: JR2ANC / 7K1AEU
+
+</p>
+
+</body>
+
+</html>

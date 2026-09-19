@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+
+<html lang="fi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body {
+    background: white;
+    color: black;
+}
+
+body {
+    font-family: "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #222;
+}
+
+h1 {
+    border-bottom: 2px solid #4a90e2;
+}
+
+h2 {
+    background: #eef5ff;
+    padding: 6px;
+}
+
+h3 {
+    color: #1f4e79;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+.note {
+    background: #fff7d6;
+    border-left: 5px solid #f0c000;
+    padding: 10px;
+}
+
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+</style>
+
+<title>toy_meter Version 2.0 Setup Utility</title>
+
+</head>
+
+<body>
+
+<h1>toy_meter Version 2.0</h1>
+
+<p><b>Setup Utility</b></p>
+
+<h2>Yhteenveto</h2>
+
+<p>
+toy_meter on yksinkertainen mittarisovellus, joka näyttää radioamatöörilähettimen käyttötilan.
+</p>
+
+<p>
+Se näyttää SIG-, PO-, SWR- ja ALC-mittarit Hamlibin kautta.
+</p>
+
+<h2>Päätoiminnot</h2>
+
+<table>
+
+<tr>
+<th>Toiminto</th>
+<th>Sisältö</th>
+</tr>
+
+<tr>
+<td>Mittari</td>
+<td>SIG / PO / SWR / ALC</td>
+</tr>
+
+<tr>
+<td>VFO-näyttö</td>
+<td>Käytössä olevan VFO-taajuuden näyttö (alle 1000 MHz)</td>
+</tr>
+
+<tr>
+<td>TIME-näyttö</td>
+<td>UTC / Paikallinen aika</td>
+</tr>
+
+<tr>
+<td>FNC</td>
+<td>YAESUn uudet CAT-komennot</td>
+</tr>
+
+<tr>
+<td>Korjaus</td>
+<td>PO- / ALC-mittarin korjaus</td>
+</tr>
+
+<tr>
+<td>Palvelintoiminto</td>
+<td>Tuki Hamlib rigctld -palvelinyhteydelle</td>
+</tr>
+
+</table>
+
+<h2>Ominaisuudet</h2>
+
+<ul>
+
+<li>Toimii Hamlib rigctld -palvelun avulla</li>
+
+<li>Tukee kahta yhteystapaa: USB Serial(Server) / Network rigctld(Client)</li>
+
+<li>Tuki PO- / ALC-mittarin korjaukselle</li>
+
+<li>Tukee macOS / Windows 11 / Raspberry Pi OS / Linux</li>
+
+</ul>
+
+<div class="note">
+
+<b>Huomio</b>
+
+<ul>
+
+<li>
+Tämä ohjelmisto ei ole mittalaite, vaan apumittari.
+</li>
+
+<li>
+Jos muut sovellukset tai tietokoneet yhdistävät Hamlib rigctld -palveluun,
+käytä Connection Type -asetuksessa <b>Network rigctld</b>.
+</li>
+
+</ul>
+
+</div>
+
+<h2>USB(Server)-tila</h2>
+
+<p>
+USB Serial(Server) -tilassa toy_meter käynnistää Hamlib rigctld -palvelun paikallisessa tietokoneessa ja kommunikoi lähettimen kanssa.
+</p>
+
+<h3>Useiden toy_meter -instanssien käyttö samassa tietokoneessa</h3>
+
+<p>
+Samassa tietokoneessa voidaan käynnistää enintään <b>4</b> toy_meter -instanssia USB(Server)-tilassa.
+</p>
+
+<p>
+Käytettävissä olevat porttinumerot ovat seuraavat:
+</p>
+
+<table>
+
+<tr>
+<th>toy_meter</th>
+<th>PORT</th>
+</tr>
+
+<tr>
+<td>1. laite</td>
+<td>4532</td>
+</tr>
+
+<tr>
+<td>2. laite</td>
+<td>4534</td>
+</tr>
+
+<tr>
+<td>3. laite</td>
+<td>4536</td>
+</tr>
+
+<tr>
+<td>4. laite</td>
+<td>4538</td>
+</tr>
+
+</table>
+
+<p>
+Jos samassa tietokoneessa valvotaan useita lähettimiä samanaikaisesti,
+käytä eri porttinumeroa jokaiselle.
+</p>
+
+<h3>Useiden toy_meter -instanssien käynnistäminen</h3>
+
+<p>
+Jos haluat käyttää useita toy_meter -instansseja, kopioi ohjelma ja anna jokaiselle eri tiedostonimi.
+</p>
+
+<p>Voit esimerkiksi nimetä ne lähettimen mallin mukaan:</p>
+
+<pre>
+toy_meter_FTDX10
+toy_meter_FT818
+toy_meter_FT857
+toy_meter_FTDX101
+</pre>
+
+<p>
+Kussakin toy_meter -instanssissa määritetään lähettimen asetukset, sarjaportti,
+siirtonopeus ja rigctld-porttinumero erikseen.
+</p>
+
+<div class="note">
+
+<b>Huomio</b>
+
+<p>
+Samaa sarjaporttia ei voi käyttää useissa toy_meter -instansseissa.
+Yhdistä jokainen toy_meter eri lähettimeen ja eri sarjaporttiin.
+</p>
+
+</div>
+
+<h3>Käytössä olevan porttinumeron tarkistaminen</h3>
+
+<p>
+Kun useita toy_meter-ohjelmia käynnistetään,
+voit tarkistaa parhaillaan käytössä olevan porttinumeron <b>mittaripaneelin otsikosta [USB:453x]</b>.
+</p>
+
+<p>
+Paneelin yläosassa näkyy esimerkiksi:
+</p>
+
+<pre>
+ToyMeter V2.0 [USB:4532]
+</pre>
+
+<p>
+Näin voit tarkistaa, mitä USB(Server)-porttia kukin toy_meter käyttää.
+</p>
+
+<h2>SETUP (Asetukset)</h2>
+
+<h3>Connection Type (Yhteystapa)</h3>
+
+<table>
+
+<tr>
+<th>Kohta</th>
+<th>Selitys</th>
+</tr>
+
+<tr>
+<td>USB Serial (Server)</td>
+<td>
+Kun USB-liitettyä lähetintä ohjataan paikallisen tietokoneen rigctld-palvelulla.
+toy_meter käynnistää rigctld-palvelun.
+</td>
+</tr>
+
+<tr>
+<td>Network rigctld (Client)</td>
+<td>
+Kun yhdistetään verkon kautta toiseen tietokoneeseen, jossa Hamlib rigctld toimii.
+</td>
+</tr>
+
+</table>
+
+<h3>Radio Setting (Lähettimen asetukset)</h3>
+
+<table>
+
+<tr>
+<th>Kohta</th>
+<th>Selitys.1</th>
+<th>Selitys.2</th>
+</tr>
+
+<tr>
+<td>MFG / MODEL / RF POWER RANGE</td>
+<td>Määritä lähettimen mukaan</td>
+<td></td>
+</tr>
+
+<tr>
+<td rowspan="3">OPERATING MODE</td>
+<td>Normal</td>
+<td>Normaali käyttö</td>
+</tr>
+
+<tr>
+<td>Monitor</td>
+<td>
+Näyttää käytettävissä olevat mittaritoiminnot vihreänä.
+Käytetään myös PO- / ALC-mittarin korjaukseen.
+USB(Server)-tilassa voit tarkistaa käytössä olevan porttinumeron.
+</td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td>
+Vianetsintätila (voi hidastaa vasteaikaa)
+</td>
+</tr>
+
+</table>
+
+<h3>RF REFERENCE (PO-mittarin korjaus)</h3>
+
+<table>
+
+<tr>
+<th>Kohta</th>
+<th>Vaiheet</th>
+</tr>
+
+<tr>
+<td rowspan="4">RF REFERENCE</td>
+<td>STEP-1. Aseta OPERATING MODE tilaan Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Lähetä 25 % maksimitehosta (FM-tila suositeltu)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Napsauta vihreää “PO”-painiketta korjataksesi
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Tarvittaessa säädä korjausarvoa manuaalisesti
+(vaiheet 1–3 eivät ole pakollisia)
+</td>
+</tr>
+
+</table>
+
+<h3>ALC REFERENCE (ALC-mittarin korjaus)</h3>
+
+<table>
+
+<tr>
+<th>Kohta</th>
+<th>Vaiheet</th>
+</tr>
+
+<tr>
+<td rowspan="4">ALC REFERENCE</td>
+<td>STEP-1. Aseta OPERATING MODE tilaan Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Lähetä siten, että lähettimen ALC-alueen ylärajan alapuolelle jää hieman tilaa
+(WSJT-X suositeltu)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Napsauta vihreää “ALC”-painiketta korjataksesi
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. Tarvittaessa säädä korjausarvoa manuaalisesti
+(vaiheet 1–3 eivät ole pakollisia)
+</td>
+</tr>
+
+</table>
+
+<p>
+Alla on esimerkki lähettimen ALC-mittarista.
+Säädä niin, että neula on hieman ▲-merkin yläpuolella.
+</p>
+
+<p>
+<img src="ALC.png" alt="ALC Meter" width="200">
+</p>
+
+<p>
+<b>Huomio:</b>
+PO- / ALC-mittarit voivat vaihdella suuresti lähettimen mallin mukaan.
+Käytä niitä vain suuntaa-antavana tietona.
+</p>
+
+<h3>Serial Port Setting (Sarjaportin asetukset)</h3>
+
+<table>
+
+<tr>
+<th>Kohta</th>
+<th>Selitys.1</th>
+<th>Selitys.2</th>
+</tr>
+
+<tr>
+<td>
+SERIAL PORT / BAUD RATE / DATA BITS / PARITY / STOP BITS / FLOW CONTROL
+</td>
+<td>Määritä lähettimen mukaan</td>
+<td></td>
+</tr>
+
+<tr>
+<td>SCAN_SP</td>
+<td>0.1 〜 0.5</td>
+<td>
+Pienempi arvo parantaa neulan vasteaikaa.
+Vanhoissa tietokoneissa tai lähettimissä suositellaan suurempaa arvoa.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Huomio:</b>
+Viestintävirheen sattuessa asetussivu avautuu automaattisesti.
+</p>
+
+<h3>Network rigctld (Verkkoyhteys)</h3>
+
+<table>
+
+<tr>
+<th>Kohta</th>
+<th>Selitys.1</th>
+<th>Selitys.2</th>
+</tr>
+
+<tr>
+<td>HOST</td>
+<td>IP ADDRESS</td>
+<td>
+Tietokoneen (Server) IP-osoite, jossa Hamlib rigctld toimii.
+Paikallisessa käytössä jätä tyhjäksi tai käytä 127.0.0.1.
+</td>
+</tr>
+
+<tr>
+<td>PORT</td>
+<td>PORT NO</td>
+<td>
+Tietokoneen (Server) porttinumero, jossa Hamlib rigctld toimii.
+Oletus on 4532.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Viite:</b>
+Kun käytät Server-tilaa, aseta Server-puolen toy_meter
+Connection Type -asetukseen USB Serial(Server).
+Asiakasohjelmassa määritä toy_meterin tietokoneen IP-osoite ja porttinumero.
+</p>
+
+<p>
+Esimerkki:
+</p>
+
+<pre>
+192.168.1.100:4532
+</pre>
+
+<h3>Custom Functions (Mukautetut toiminnot)</h3>
+
+<table>
+
+<tr>
+<th>Kohta</th>
+<th>Selitys.1</th>
+<th>Selitys.2</th>
+</tr>
+
+<tr>
+<td rowspan="2">FNCx</td>
+<td>Ensimmäinen parametri</td>
+<td>Näyttölabeli (enintään 7 merkkiä)</td>
+</tr>
+
+<tr>
+<td>Toinen parametri</td>
+<td>Ohjauskomento (enintään 16 merkkiä)</td>
+</tr>
+
+</table>
+
+<p>
+<b>Huomio:</b>
+Tämä toiminto on toteutettu YAESUn uusille CAT-komennoille.
+Toimivuutta muilla lähettimillä ei taata.
+</p>
+
+<ul>
+
+<li>
+Ei tue komentoja, jotka vaativat vastausta.
+</li>
+
+<li>
+Jos komennon suoritus kestää pitkään,
+asetussivu saattaa avautua.
+Tällaisten komentojen käyttöä ei suositella.
+</li>
+
+<li>
+Käytä vain, jos ymmärrät lähettimen viestintäspesifikaatiot (CAT-komennot).
+</li>
+
+</ul>
+
+<h3>Setup & Exit (Asetukset ja lopetus)</h3>
+
+<table>
+
+<tr>
+<th>Kohta</th>
+<th>Selitys</th>
+</tr>
+
+<tr>
+<td>Oikea alakulma JP1RXQ</td>
+<td>Asetussivu (Setup)</td>
+</tr>
+
+<tr>
+<td>Vasen yläkulma S</td>
+<td>
+Lopetus (vain Raspberry Pi 320×480 -näytölle)
+</td>
+</tr>
+
+<tr>
+<td>Oikea yläkulma W</td>
+<td>
+TUNE (vain YAESUn uusille CAT-komennoille)
+</td>
+</tr>
+
+</table>
+
+<h2>Tukijärjestelmä</h2>
+
+<p>
+Hamlib / rigctld tarvitaan yhteydenpitoon radiolaitteen kanssa.
+</p>
+
+<h2>Suositellut asetukset</h2>
+
+<table>
+
+<tr>
+<th>Ympäristö</th>
+<th>Suositeltu SCAN_SP-arvo</th>
+</tr>
+
+<tr>
+<td>Apple Silicon</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Windows 11</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Raspberry Pi 3B+</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Yhteysnopeus 9600bps</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Yhteysnopeus 38400bps</td>
+<td>0.1 〜 0.3</td>
+</tr>
+
+</table>
+
+<h2>Vastuuvapauslauseke</h2>
+
+<ul>
+
+<li>
+Ohjelmiston käytöstä aiheutuvista vioista tai tietojen menetyksestä ei tekijä ole vastuussa.
+</li>
+
+<li>
+License: MPL 2.0, mutta kaupallinen käyttö on kielletty
+</li>
+
+<li>
+Käytä omalla vastuullasi.
+</li>
+
+</ul>
+
+<hr>
+
+<p style="text-align:right">
+
+<b>Kehitys: JP1RXQ</b>
+
+Arviointi: JR2ANC / 7K1AEU
+
+</p>
+
+</body>
+
+</html>

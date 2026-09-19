@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<style>
+
+body {
+    background: white;
+    color: black;
+}
+
+body {
+    font-family: "Yu Gothic UI", "Meiryo", sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    color: #222;
+}
+
+h1 {
+    border-bottom: 2px solid #4a90e2;
+}
+
+h2 {
+    background: #eef5ff;
+    padding: 6px;
+}
+
+h3 {
+    color: #1f4e79;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+}
+
+th, td {
+    border: 1px solid #bbb;
+    padding: 6px;
+    vertical-align: top;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+.note {
+    background: #fff7d6;
+    border-left: 5px solid #f0c000;
+    padding: 10px;
+}
+
+pre {
+    background: #f7f7f7;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+code {
+    font-family: Consolas, monospace;
+}
+
+</style>
+
+<title>toy_meter Version 2.0 Setup Utility</title>
+
+</head>
+
+<body>
+
+<h1>toy_meter Version 2.0</h1>
+
+<p><b>Setup Utility</b></p>
+
+<h2>Podsumowanie</h2>
+
+<p>
+toy_meter to prosta aplikacja miernika, która wyświetla stan pracy radiostacji amatorskiej.
+</p>
+
+<p>
+Wyświetla wskaźniki SIG, PO, SWR i ALC za pośrednictwem Hamlib.
+</p>
+
+<h2>Główne funkcje</h2>
+
+<table>
+
+<tr>
+<th>Funkcja</th>
+<th>Opis</th>
+</tr>
+
+<tr>
+<td>Miernik</td>
+<td>SIG / PO / SWR / ALC</td>
+</tr>
+
+<tr>
+<td>Wyświetlanie VFO</td>
+<td>Wyświetlanie częstotliwości VFO podczas pracy (obsługa poniżej 1000 MHz)</td>
+</tr>
+
+<tr>
+<td>Wyświetlanie TIME</td>
+<td>UTC / Czas lokalny</td>
+</tr>
+
+<tr>
+<td>FNC</td>
+<td>Wysyłanie nowych poleceń CAT firmy YAESU</td>
+</tr>
+
+<tr>
+<td>Korekcja</td>
+<td>Korekcja mierników PO / ALC</td>
+</tr>
+
+<tr>
+<td>Funkcja serwera</td>
+<td>Obsługa połączenia serwerowego z użyciem Hamlib rigctld</td>
+</tr>
+
+</table>
+
+<h2>Cechy</h2>
+
+<ul>
+
+<li>Działa z wykorzystaniem Hamlib rigctld</li>
+
+<li>Obsługuje dwa typy połączeń: USB Serial(Server) / Network rigctld(Client)</li>
+
+<li>Obsługa korekcji mierników PO / ALC</li>
+
+<li>Kompatybilny z macOS / Windows 11 / Raspberry Pi OS / Linux</li>
+
+</ul>
+
+<div class="note">
+
+<b>Uwaga</b>
+
+<ul>
+
+<li>
+To oprogramowanie nie jest przyrządem pomiarowym, lecz pomocniczym miernikiem.
+</li>
+
+<li>
+Jeśli inne aplikacje lub komputery łączą się z Hamlib rigctld,
+użyj <b>Network rigctld</b> w ustawieniu Connection Type.
+</li>
+
+</ul>
+
+</div>
+
+<h2>Tryb USB(Server)</h2>
+
+<p>
+W trybie USB Serial(Server) toy_meter uruchamia Hamlib rigctld na lokalnym komputerze i komunikuje się z radiostacją.
+</p>
+
+<h3>Korzystanie z wielu instancji toy_meter na jednym komputerze</h3>
+
+<p>
+Na jednym komputerze można jednocześnie uruchomić maksymalnie <b>4</b> instancje toy_meter w trybie USB(Server).
+</p>
+
+<p>
+Dostępne numery portów:
+</p>
+
+<table>
+
+<tr>
+<th>toy_meter</th>
+<th>PORT</th>
+</tr>
+
+<tr>
+<td>Pierwsza instancja</td>
+<td>4532</td>
+</tr>
+
+<tr>
+<td>Druga instancja</td>
+<td>4534</td>
+</tr>
+
+<tr>
+<td>Trzecia instancja</td>
+<td>4536</td>
+</tr>
+
+<tr>
+<td>Czwarta instancja</td>
+<td>4538</td>
+</tr>
+
+</table>
+
+<p>
+Jeśli monitorujesz kilka radiostacji jednocześnie na tym samym komputerze,
+użyj różnych numerów portów dla każdej z nich.
+</p>
+
+<h3>Jak uruchomić wiele instancji toy_meter</h3>
+
+<p>
+Aby korzystać z wielu instancji toy_meter, skopiuj program
+i nadaj każdej kopii inną nazwę pliku.
+</p>
+
+<p>Na przykład możesz nazwać je według modelu radiostacji:</p>
+
+<pre>
+toy_meter_FTDX10
+toy_meter_FT818
+toy_meter_FT857
+toy_meter_FTDX101
+</pre>
+
+<p>
+W każdej instancji ustaw osobno radiostację, port szeregowy,
+prędkość komunikacji oraz numer portu rigctld.
+</p>
+
+<div class="note">
+
+<b>Uwaga</b>
+
+<p>
+Ten sam port szeregowy nie może być używany przez wiele instancji toy_meter.
+Podłącz każdą instancję do innej radiostacji i innego portu szeregowego.
+</p>
+
+</div>
+
+<h3>Sprawdzanie używanego numeru portu</h3>
+
+<p>
+Po uruchomieniu wielu instancji toy_meter
+można sprawdzić numer aktualnie używanego portu w <b>tytule panelu miernika [USB:453x]</b>.
+</p>
+
+<p>
+Na górze panelu pojawi się na przykład:
+</p>
+
+<pre>
+ToyMeter V2.0 [USB:4532]
+</pre>
+
+<p>
+Pozwala to sprawdzić, który port USB(Server) jest aktualnie używany.
+</p>
+
+<h2>SETUP (Ustawienia)</h2>
+
+<h3>Connection Type (Typ połączenia)</h3>
+
+<table>
+
+<tr>
+<th>Element</th>
+<th>Opis</th>
+</tr>
+
+<tr>
+<td>USB Serial (Server)</td>
+<td>
+Gdy radiostacja podłączona przez USB jest sterowana przez rigctld na lokalnym komputerze.
+toy_meter uruchamia rigctld.
+</td>
+</tr>
+
+<tr>
+<td>Network rigctld (Client)</td>
+<td>
+Gdy łączysz się przez sieć z innym komputerem, na którym działa Hamlib rigctld.
+</td>
+</tr>
+
+</table>
+
+<h3>Radio Setting (Ustawienia radiostacji)</h3>
+
+<table>
+
+<tr>
+<th>Element</th>
+<th>Opis.1</th>
+<th>Opis.2</th>
+</tr>
+
+<tr>
+<td>MFG / MODEL / RF POWER RANGE</td>
+<td>Ustaw zgodnie z radiostacją</td>
+<td></td>
+</tr>
+
+<tr>
+<td rowspan="3">OPERATING MODE</td>
+<td>Normal</td>
+<td>Normalna praca</td>
+</tr>
+
+<tr>
+<td>Monitor</td>
+<td>
+Wyświetla dostępne funkcje mierników na zielono.
+Używany także do korekcji mierników PO / ALC.
+W trybie USB(Server) pozwala sprawdzić używany port.
+</td>
+</tr>
+
+<tr>
+<td>Debug</td>
+<td>
+Tryb debugowania (może spowolnić reakcję)
+</td>
+</tr>
+
+</table>
+
+<h3>RF REFERENCE (Korekcja miernika PO)</h3>
+
+<table>
+
+<tr>
+<th>Element</th>
+<th>Procedura</th>
+</tr>
+
+<tr>
+<td rowspan="4">RF REFERENCE</td>
+<td>STEP-1. Ustaw OPERATING MODE na Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Nadaj z mocą 25% maksymalnej (zalecany tryb FM)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Kliknij zielony „PO”, aby skorygować
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. W razie potrzeby ręcznie dostosuj wartość korekcji
+(kroki 1–3 nie są obowiązkowe)
+</td>
+</tr>
+
+</table>
+
+<h3>ALC REFERENCE (Korekcja miernika ALC)</h3>
+
+<table>
+
+<tr>
+<th>Element</th>
+<th>Procedura</th>
+</tr>
+
+<tr>
+<td rowspan="4">ALC REFERENCE</td>
+<td>STEP-1. Ustaw OPERATING MODE na Monitor</td>
+</tr>
+
+<tr>
+<td>
+STEP-2. Nadaj tak, aby wartość ALC była nieco poniżej górnej granicy
+(zalecane użycie WSJT-X)
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-3. Kliknij zielony „ALC”, aby skorygować
+</td>
+</tr>
+
+<tr>
+<td>
+STEP-4. W razie potrzeby ręcznie dostosuj wartość korekcji
+(kroki 1–3 nie są obowiązkowe)
+</td>
+</tr>
+
+</table>
+
+<p>
+Poniżej znajduje się przykład miernika ALC radiostacji.
+Dostosuj tak, aby wskazówka była nieco powyżej symbolu ▲.
+</p>
+
+<p>
+<img src="ALC.png" alt="ALC Meter" width="200">
+</p>
+
+<p>
+<b>Uwaga:</b>
+Mierniki PO / ALC różnią się znacznie w zależności od modelu radiostacji.
+Używaj ich jedynie jako wartości orientacyjnych.
+</p>
+
+<h3>Serial Port Setting (Ustawienia portu szeregowego)</h3>
+
+<table>
+
+<tr>
+<th>Element</th>
+<th>Opis.1</th>
+<th>Opis.2</th>
+</tr>
+
+<tr>
+<td>
+SERIAL PORT / BAUD RATE / DATA BITS / PARITY / STOP BITS / FLOW CONTROL
+</td>
+<td>Ustaw zgodnie z radiostacją</td>
+<td></td>
+</tr>
+
+<tr>
+<td>SCAN_SP</td>
+<td>0.1 〜 0.5</td>
+<td>
+Im mniejsza wartość, tym lepsza reakcja wskazówki.
+Dla starszych komputerów i radiostacji zalecana jest większa wartość.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Uwaga:</b>
+W przypadku błędu komunikacji ekran ustawień otworzy się automatycznie.
+</p>
+
+<h3>Network rigctld (Połączenie sieciowe)</h3>
+
+<table>
+
+<tr>
+<th>Element</th>
+<th>Opis.1</th>
+<th>Opis.2</th>
+</tr>
+
+<tr>
+<td>HOST</td>
+<td>IP ADDRESS</td>
+<td>
+Adres IP komputera (Server), na którym działa Hamlib rigctld.
+Lokalnie: pozostaw puste lub użyj 127.0.0.1.
+</td>
+</tr>
+
+<tr>
+<td>PORT</td>
+<td>PORT NO</td>
+<td>
+Numer portu komputera (Server), na którym działa Hamlib rigctld.
+Domyślnie 4532.
+</td>
+</tr>
+
+</table>
+
+<p>
+<b>Informacja:</b>
+Przy użyciu trybu Server, toy_meter po stronie serwera
+powinien mieć ustawione Connection Type na USB Serial(Server).
+W aplikacji klienckiej należy podać adres IP i numer portu komputera,
+na którym działa toy_meter.
+</p>
+
+<p>
+Przykład:
+</p>
+
+<pre>
+192.168.1.100:4532
+</pre>
+
+<h3>Custom Functions (Funkcje niestandardowe)</h3>
+
+<table>
+
+<tr>
+<th>Element</th>
+<th>Opis.1</th>
+<th>Opis.2</th>
+</tr>
+
+<tr>
+<td rowspan="2">FNCx</td>
+<td>Pierwszy parametr</td>
+<td>Etykieta wyświetlania (maks. 7 znaków)</td>
+</tr>
+
+<tr>
+<td>Drugi parametr</td>
+<td>Polecenie sterujące (maks. 16 znaków)</td>
+</tr>
+
+</table>
+
+<p>
+<b>Uwaga:</b>
+Funkcja zaimplementowana dla nowych poleceń CAT firmy YAESU.
+Nie gwarantuje działania z innymi radiostacjami.
+</p>
+
+<ul>
+
+<li>
+Nie obsługuje poleceń wymagających odpowiedzi.
+</li>
+
+<li>
+Jeśli czas wykonania polecenia jest długi,
+ekran ustawień może się otworzyć.
+Nie zaleca się używania takich poleceń.
+</li>
+
+<li>
+Używaj tylko, jeśli rozumiesz specyfikację komunikacji (polecenia CAT) radiostacji.
+</li>
+
+</ul>
+
+<h3>Setup & Exit (Ustawienia i zakończenie)</h3>
+
+<table>
+
+<tr>
+<th>Element</th>
+<th>Opis</th>
+</tr>
+
+<tr>
+<td>Prawy dolny róg JP1RXQ</td>
+<td>Ekran ustawień (Setup)</td>
+</tr>
+
+<tr>
+<td>Lewy górny róg S</td>
+<td>
+Zakończenie (tylko dla wyświetlacza Raspberry Pi 320×480)
+</td>
+</tr>
+
+<tr>
+<td>Prawy górny róg W</td>
+<td>
+TUNE (tylko dla nowych poleceń CAT firmy YAESU)
+</td>
+</tr>
+
+</table>
+
+<h2>Obsługiwane środowisko</h2>
+
+<p>
+Do komunikacji z transceiverem wymagany jest Hamlib / rigctld.
+</p>
+
+<h2>Rekomendowane ustawienia</h2>
+
+<table>
+
+<tr>
+<th>Środowisko</th>
+<th>Zalecana wartość SCAN_SP</th>
+</tr>
+
+<tr>
+<td>Apple Silicon</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Windows 11</td>
+<td>0.1 〜 0.2</td>
+</tr>
+
+<tr>
+<td>Raspberry Pi 3B+</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Prędkość połączenia 9600bps</td>
+<td>0.3 〜 0.5</td>
+</tr>
+
+<tr>
+<td>Prędkość połączenia 38400bps</td>
+<td>0.1 〜 0.3</td>
+</tr>
+
+</table>
+
+<h2>Informacja o odpowiedzialności</h2>
+
+<ul>
+
+<li>
+Autor nie ponosi odpowiedzialności za uszkodzenia lub utratę danych spowodowane użyciem tego oprogramowania.
+</li>
+
+<li>
+License: MPL 2.0, jednak użycie komercyjne jest zabronione
+</li>
+
+<li>
+Używaj na własną odpowiedzialność.
+</li>
+
+</ul>
+
+<hr>
+
+<p style="text-align:right">
+
+<b>Autor: JP1RXQ</b>
+
+Ocena: JR2ANC / 7K1AEU
+
+</p>
+
+</body>
+
+</html>
