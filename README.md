@@ -401,10 +401,6 @@ JP1RXQ
 JR2ANC
 7K1AEU
 
-**Development Support**
-
-ChatGPT Support
-
 ---
 
 ## Disclaimer
